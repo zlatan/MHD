@@ -49,7 +49,7 @@ int main(void)
 		vbxx[ix][iy][iz]= vbxy[ix][iy][iz]= vbxz[ix][iy][iz]=
 		vbyx[ix][iy][iz]= vbyy[ix][iy][iz]= vbyz[ix][iy][iz]=
 		vbzx[ix][iy][iz]= vbzy[ix][iy][iz]= vbzz[ix][iy][iz]=0.0;
-		vx[ix][iy][iz]=exp(-(Qx*Qx+Qy*Qy+Qz*Qz))
+		vx[ix][iy][iz]=exp(-(Qx*Qx+Qy*Qy+Qz*Qz));
 		DV[ix][iy][iz]=DVQ;
 			// summation cycles for nonlinear terms
 				for (int jx=0;jx<=Lx; jx++)
@@ -113,10 +113,11 @@ int main(void)
 			 // velociped projection
 			 rnvx[ix][iy][iz]-=rnx*vn; rnvy[ix][iy][iz]-=rny*vn; rnvz[ix][iy][iz]-=rnz*vn;
 			 // magnetic projection
-			 rnbx[ix][iy][iz]-=rnx*bn; rnby[ix][iy][iz]-=rny*bn; rnbz[ix][iy][iz]-=rnz*bn; 
+			 rnbx[ix][iy][iz]-=rnx*bn; rnby[ix][iy][iz]-=rny*bn; rnbz[ix][iy][iz]-=rnz*bn;
+			 printf("%g %g %g\n",Qx, Qy, (vvxx[ix][iy][iz]-exp(-.5*(Qx*Qx+Qy*Qy+Qz*Qz))/(sqrt(8.*M_PI)*sqrt(8.*M_PI)*sqrt(8.*M_PI)))/vvxx[ix][iy][iz]);
 			}
 		}
 	}
-vvxx[ix][iy][iz]=?=exp(-.5*(Qx*Qx+Qy*Qy+Qz*Qz))/(sqrt(8.*M_PI)*sqrt(8.*M_PI)*sqrt(8.*M_PI));
+	// vvxx[ix][iy][iz] - exp(-.5*(Qx*Qx+Qy*Qy+Qz*Qz))/(sqrt(8.*M_PI)*sqrt(8.*M_PI)*sqrt(8.*M_PI));
 	return 0;
 }
