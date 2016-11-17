@@ -51,7 +51,17 @@ int main(void)
 		vbzx[ix][iy][iz]= vbzy[ix][iy][iz]= vbzz[ix][iy][iz]=0.0;
 		vx[ix][iy][iz]=exp(-(Qx*Qx+Qy*Qy+Qz*Qz));
 		DV[ix][iy][iz]=DVQ;
-			// summation cycles for nonlinear terms
+			}
+		}
+	}
+
+        for (int ix=0;ix<=Lx; ix++)
+        {double Qx=-Qx0+ix*DQx;
+                for (int iy=0;iy<=Ly; iy++)
+                {double Qy=-Qy0+iy*DQy;
+                        for (int iz=0;iz<=Lz; iz++)
+                        {double Qz=-Qz0+iz*DQz;	
+					// summation cycles for nonlinear terms
 				for (int jx=0;jx<=Lx; jx++)
 				{int kx=ix-jx+Nx; if(kx<0) continue; if(kx>Lx) continue;
 					for (int jy=0;jy<=Ly; jy++)
@@ -62,7 +72,7 @@ int main(void)
 						 //bb
 							bbxx[ix][iy][iz]+=bx[jx][jy][jz]*bx[kx][ky][kz]*DV[jx][jy][jz]; bbxy[ix][iy][iz]+=bx[jx][jy][jz]*by[kx][ky][kz]*DV[jx][jy][jz]; bbxz[ix][iy][iz]+=bx[jx][jy][jz]*bz[kx][ky][kz]*DV[jx][jy][jz];
 							bbyx[ix][iy][iz]+=by[jx][jy][jz]*bx[kx][ky][kz]*DV[jx][jy][jz]; bbyy[ix][iy][iz]+=by[jx][jy][jz]*by[kx][ky][kz]*DV[jx][jy][jz]; bbyz[ix][iy][iz]+=by[jx][jy][jz]*bz[kx][ky][kz]*DV[jx][jy][jz];
-							bbzx[ix][iy][iz]+=bz[jx][jy][jz]*bx[kx][ky][kz]*DV[jx][jy][jz]; bbzy[ix][iy][iz]+=by[jx][jy][jz]*by[kx][ky][kz]*DV[jx][jy][jz]; bbzz[ix][iy][iz]+=bz[jx][jy][jz]*bz[kx][ky][kz]*DV[jx][jy][jz];
+							bbzx[ix][iy][iz]+=bz[jx][jy][jz]*bx[kx][ky][kz]*DV[jx][jy][jz]; bbzy[ix][iy][iz]+=bz[jx][jy][jz]*by[kx][ky][kz]*DV[jx][jy][jz]; bbzz[ix][iy][iz]+=bz[jx][jy][jz]*bz[kx][ky][kz]*DV[jx][jy][jz];
 						 //vv
 							vvxx[ix][iy][iz]+=vx[jx][jy][jz]*vx[kx][ky][kz]*DV[jx][jy][jz]; vvxy[ix][iy][iz]+=vx[jx][jy][jz]*vy[kx][ky][kz]*DV[jx][jy][jz]; vvxz[ix][iy][iz]+=vx[jx][jy][jz]*vz[kx][ky][kz]*DV[jx][jy][jz];
 							vvyx[ix][iy][iz]+=vy[jx][jy][jz]*vx[kx][ky][kz]*DV[jx][jy][jz]; vvyy[ix][iy][iz]+=vy[jx][jy][jz]*vy[kx][ky][kz]*DV[jx][jy][jz]; vvyz[ix][iy][iz]+=vy[jx][jy][jz]*vz[kx][ky][kz]*DV[jx][jy][jz];
@@ -114,7 +124,7 @@ int main(void)
 			 rnvx[ix][iy][iz]-=rnx*vn; rnvy[ix][iy][iz]-=rny*vn; rnvz[ix][iy][iz]-=rnz*vn;
 			 // magnetic projection
 			 rnbx[ix][iy][iz]-=rnx*bn; rnby[ix][iy][iz]-=rny*bn; rnbz[ix][iy][iz]-=rnz*bn;
-			 printf("%g %g %g\n",Qx, Qy, (vvxx[ix][iy][iz]-exp(-.5*(Qx*Qx+Qy*Qy+Qz*Qz))/(sqrt(8.*M_PI)*sqrt(8.*M_PI)*sqrt(8.*M_PI)))/vvxx[ix][iy][iz]);
+			 printf("%g %g %g %g\n",Qx, Qy, Qz, vvxx[ix][iy][iz]);
 			}
 		}
 	}
