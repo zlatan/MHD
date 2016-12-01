@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <math.h>
+#include <stdlib.h>
 
 int main(void)
 {
@@ -44,6 +45,7 @@ int main(void)
 	double fbz[NDimx][NDimy][NDimz];
 	double rnuk=0.001;
 	double rnum=0.001;
+	double Tempi,Nt,dt,t,it;
 
 	betax = sin(alpha);
 	betaz = cos(alpha);
@@ -56,33 +58,72 @@ int main(void)
 		{double Qy=-Qy0+iy*DQy;
 			for (int iz=0;iz<=Lz; iz++)
 			{double Qz=-Qz0+iz*DQz;
-		bbxx[ix][iy][iz]= bbxy[ix][iy][iz]= bbxz[ix][iy][iz]=
-		bbyx[ix][iy][iz]= bbyy[ix][iy][iz]= bbyz[ix][iy][iz]=
-		bbzx[ix][iy][iz]= bbzy[ix][iy][iz]= bbzz[ix][iy][iz]=
-		vvxx[ix][iy][iz]= vvxy[ix][iy][iz]= vvxz[ix][iy][iz]=
-		vvyx[ix][iy][iz]= vvyy[ix][iy][iz]= vvyz[ix][iy][iz]=
-		vvzx[ix][iy][iz]= vvzy[ix][iy][iz]= vvzz[ix][iy][iz]=
-		bvxx[ix][iy][iz]= bvxy[ix][iy][iz]= bvxz[ix][iy][iz]=
-		bvyx[ix][iy][iz]= bvyy[ix][iy][iz]= bvyz[ix][iy][iz]=
-		bvzx[ix][iy][iz]= bvzy[ix][iy][iz]= bvzz[ix][iy][iz]=
-		vbxx[ix][iy][iz]= vbxy[ix][iy][iz]= vbxz[ix][iy][iz]=
-		vbyx[ix][iy][iz]= vbyy[ix][iy][iz]= vbyz[ix][iy][iz]=
-		vbzx[ix][iy][iz]= vbzy[ix][iy][iz]= vbzz[ix][iy][iz]=0.0;
-		vx[ix][iy][iz]=exp(-(Qx*Qx+Qy*Qy+Qz*Qz));
-		DV[ix][iy][iz]=DVQ;
-				}
+		        DV[ix][iy][iz]=DVQ;
+				bbxx[ix][iy][iz]=(rand()-.5)*1E-50;
+				bbxy[ix][iy][iz]=(rand()-.5)*1E-50; 
+				bbxz[ix][iy][iz]=(rand()-.5)*1E-50;
+				bbyx[ix][iy][iz]=(rand()-.5)*1E-50;
+				bbyy[ix][iy][iz]=(rand()-.5)*1E-50;
+				bbyz[ix][iy][iz]=(rand()-.5)*1E-50;
+				bbzx[ix][iy][iz]=(rand()-.5)*1E-50;
+				bbzy[ix][iy][iz]=(rand()-.5)*1E-50;
+				bbzz[ix][iy][iz]=(rand()-.5)*1E-50;
+				vvxx[ix][iy][iz]=(rand()-.5)*1E-50;
+				vvxy[ix][iy][iz]=(rand()-.5)*1E-50;
+				vvxz[ix][iy][iz]=(rand()-.5)*1E-50;
+				vvyx[ix][iy][iz]=(rand()-.5)*1E-50;
+				vvyy[ix][iy][iz]=(rand()-.5)*1E-50;
+				vvyz[ix][iy][iz]=(rand()-.5)*1E-50;
+				vvzx[ix][iy][iz]=(rand()-.5)*1E-50;
+				vvzy[ix][iy][iz]=(rand()-.5)*1E-50;
+				vvzz[ix][iy][iz]=(rand()-.5)*1E-50;
+				bvxx[ix][iy][iz]=(rand()-.5)*1E-50;
+				bvxy[ix][iy][iz]=(rand()-.5)*1E-50;
+				bvxz[ix][iy][iz]=(rand()-.5)*1E-50;
+				bvyx[ix][iy][iz]=(rand()-.5)*1E-50; 
+				bvyy[ix][iy][iz]=(rand()-.5)*1E-50; 
+				bvyz[ix][iy][iz]=(rand()-.5)*1E-50;
+				bvzx[ix][iy][iz]=(rand()-.5)*1E-50; 
+				bvzy[ix][iy][iz]=(rand()-.5)*1E-50; 
+				bvzz[ix][iy][iz]=(rand()-.5)*1E-50;
+				vbxx[ix][iy][iz]=(rand()-.5)*1E-50; 
+				vbxy[ix][iy][iz]=(rand()-.5)*1E-50;
+				vbxz[ix][iy][iz]=(rand()-.5)*1E-50;
+				vbyx[ix][iy][iz]=(rand()-.5)*1E-50;
+				vbyy[ix][iy][iz]=(rand()-.5)*1E-50;
+				vbyz[ix][iy][iz]=(rand()-.5)*1E-50;
+				vbzx[ix][iy][iz]=(rand()-.5)*1E-50; 
+				vbzy[ix][iy][iz]=(rand()-.5)*1E-50;
+				vbzz[ix][iy][iz]=(rand()-.5)*1E-50;
+				vx[ix][iy][iz]=exp(-(Qx*Qx+Qy*Qy+Qz*Qz));// inicializacija na skorosti
+				
+				Q2=Qx*Qx+Qy*Qy+Qz*Qz;
+				Q=sqrt(Q2);
+				rnx=Qx/Q; rny=Qy/Q; rnz=Qz/Q;
+				 
+				vn = vx[ix][iy][iz]*rnx + vy[ix][iy][iz]*rny + vz[ix][iy][iz]*rnz;
+				bn = bx[ix][iy][iz]*rnx + by[ix][iy][iz]*rny + bz[ix][iy][iz]*rnz;	
+
+				vx[ix][iy][iz]-= vn*rnx;
+				vy[ix][iy][iz]-= vn*rny;
+				vz[ix][iy][iz]-= vn*rnz;
+				
+				bx[ix][iy][iz]-= bn*rnx;
+				by[ix][iy][iz]-= bn*rny;
+				bz[ix][iy][iz]-= bn*rnz;
 			}
 		}
+	}
 
-T=10.; Nt=100; dT=T/N;
-// nachalo na integrirane po vreme
-	for(it=1;it<=Nt; it++)
-	{
+		Tempi=10.; Nt=100; dt=Tempi/Nt;
+        // nachalo na integrirane po vreme; tuk se vyrti
+		for(it=1;it<=Nt; it++)
+		{t=it*dt;
 		  for (int ix=0;ix<=Lx; ix++)
 				{double Qx=-Qx0+ix*DQx;
 				for (int iy=0;iy<=Ly; iy++)
 				{double Qy=-Qy0+iy*DQy;
-								for (int iz=0;iz<=Lz; iz++)
+						for (int iz=0;iz<=Lz; iz++)
 								{double Qz=-Qz0+iz*DQz;
 									// summation cycles for nonlinear terms
 									for (int jx=0;jx<=Lx; jx++)
@@ -114,98 +155,79 @@ T=10.; Nt=100; dT=T/N;
 								}//iz
 							}//iy
 						}//ix
+                         // krai na nelinejnata sila
 
-	// for(int ix=0;ix<=Lx; ix++)
-	// {double Qx=-Qx0+ix*DQx;
-	// 	for(int iy=0;iy<=Ly; iy++)
-	// 	{double Qy=-Qy0+iy*DQy;
-	// 		for(int iz=0;iz<=Lz; iz++)
-	// 		{double Qz=-Qz0+iz*DQz;
-	// 		// velociped
-	// 			rnvx[ix][iy][iz]=(vvxx[ix][iy][iz]+bbxx[ix][iy][iz])*Qx+(vvxy[ix][iy][iz]+bbxy[ix][iy][iz])*Qy+(vvxz[ix][iy][iz]+bbxz[ix][iy][iz])*Qz;
-	// 			rnvy[ix][iy][iz]=(vvyx[ix][iy][iz]+bbyx[ix][iy][iz])*Qx+(vvyy[ix][iy][iz]+bbyy[ix][iy][iz])*Qy+(vvyz[ix][iy][iz]+bbyz[ix][iy][iz])*Qz;
-	// 			rnvz[ix][iy][iz]=(vvzx[ix][iy][iz]+bbzx[ix][iy][iz])*Qx+(vvzy[ix][iy][iz]+bbzy[ix][iy][iz])*Qy+(vvzz[ix][iy][iz]+bbzz[ix][iy][iz])*Qz;
-	// 		// magnitno pole
-	// 			rnbx[ix][iy][iz]=(bvxx[ix][iy][iz]-vbxx[ix][iy][iz])*Qx+(bvxy[ix][iy][iz]-vbxy[ix][iy][iz])*Qy+(bvxz[ix][iy][iz]-vbxz[ix][iy][iz])*Qz;
-	// 			rnby[ix][iy][iz]=(bvyx[ix][iy][iz]-vbyx[ix][iy][iz])*Qx+(bvyy[ix][iy][iz]-vbyy[ix][iy][iz])*Qy+(bvyz[ix][iy][iz]-vbyz[ix][iy][iz])*Qz;
-	// 			rnbz[ix][iy][iz]=(bvzx[ix][iy][iz]-vbzx[ix][iy][iz])*Qx+(bvzy[ix][iy][iz]-vbzy[ix][iy][iz])*Qy+(bvzz[ix][iy][iz]-vbzz[ix][iy][iz])*Qz;
-	// 		}
-	// 	}
-	// }
-	//
-	// for(int ix=0;ix<=Lx; ix++)
-	// {double Qx=-Qx0+ix*DQx;
-	// 	for(int iy=0;iy<=Ly; iy++)
-	// 	{double Qy=-Qy0+iy*DQy;
-	// 		for(int iz=0;iz<=Lz; iz++)
-	// 		{double Qz=-Qz0+iz*DQz;
-	// 	     Q=sqrt(Qx*Qx+Qy*Qy+Qz*Qz); if (Q==0.0) continue;
-	// 		 rnx=Qx/Q; rny= Qy/Q; rnz= Qz/Q;
-	// 		 vn=rnvx[ix][iy][iz]*rnx+ rnvy[ix][iy][iz]*rny+rnvz[ix][iy][iz]*rnz;
-	// 		 bn=rnbx[ix][iy][iz]*rnx+ rnby[ix][iy][iz]*rny+rnbz[ix][iy][iz]*rnz; // bn ==? 0.
-	// 		 // velociped projection
-	// 		 rnvx[ix][iy][iz]-=rnx*vn; rnvy[ix][iy][iz]-=rny*vn; rnvz[ix][iy][iz]-=rnz*vn;
-	// 		 // magnetic projection
-	// 		 rnbx[ix][iy][iz]-=rnx*bn; rnby[ix][iy][iz]-=rny*bn; rnbz[ix][iy][iz]-=rnz*bn;
-	// 		 printf("%g %g %g %g \n",Qx, Qy, Qz, vvxx[ix][iy][iz] );
-	// 		}
-	// 	}
-	// }
-	// // vvxx[ix][iy][iz] - exp(-.5*(Qx*Qx+Qy*Qy+Qz*Qz))/(sqrt(8.*M_PI)*sqrt(8.*M_PI)*sqrt(8.*M_PI));
+			for(int ix=0;ix<=Lx; ix++)
+			{double Qx=-Qx0+ix*DQx;
+				for(int iy=0;iy<=Ly; iy++)
+				{double Qy=-Qy0+iy*DQy;
+					for(int iz=0;iz<=Lz; iz++)
+					{double Qz=-Qz0+iz*DQz;
 
-	for(int ix=0;ix<=Lx; ix++)
-	{double Qx=-Qx0+ix*DQx;
-		for(int iy=0;iy<=Ly; iy++)
-		{double Qy=-Qy0+iy*DQy;
-			for(int iz=0;iz<=Lz; iz++)
-			{double Qz=-Qz0+iz*DQz;
+					 double fvn,fbn,aaa,fnvx,fnvy,fnvz,fnbx,fnby,fnbz,flvx,flvy,flvz,flbx,flby,flbz;
 
-			 double fvn,fbn,aaa,fnvx,fnvy,fnvz,fnbx,fnby,fnbz,flvx,flvy,flvz,flbx,flby,flbz;
+					 Q2=Qx*Qx+Qy*Qy+Qz*Qz;
+					 Q=sqrt(Q2);
+					 rnx=Qx/Q; rny=Qy/Q; rnz=Qz/Q;
+					 Qbeta=Qx*betax+Qz*betaz; // betay=0.
 
-       Q2=Qx*Qx+Qy*Qy+Qz*Qz;
-			 Q=sqrt(Q2);
-			 rnx=Qx/Q; rny=Qy/Q; rnz=Qz/Q;
-			 Qbeta=Qx*betax+Qz*betaz; // betay=0.
+					 fnvx = (vvxx[ix][iy][iz] + bbxx[ix][iy][iz] )* Qx + (vvxy[ix][iy][iz] + bbxy[ix][iy][iz]) * Qy + (vvxz[ix][iy][iz] + bbxz[ix][iy][iz]) * Qz;
+					 fnvy = (vvyx[ix][iy][iz] + bbyx[ix][iy][iz] )* Qx + (vvyy[ix][iy][iz] + bbyy[ix][iy][iz]) * Qy + (vvyz[ix][iy][iz] + bbyz[ix][iy][iz]) * Qz;
+					 fnvz = (vvzx[ix][iy][iz] + bbzx[ix][iy][iz] )* Qx + (vvzy[ix][iy][iz] + bbzy[ix][iy][iz]) * Qy + (vvzz[ix][iy][iz] + bbzz[ix][iy][iz]) * Qz;
 
-			 fnvx = (vvxx[ix][iy][iz] + bbxx[ix][iy][iz] )* Qx + (vvxy[ix][iy][iz] + bbxy[ix][iy][iz]) * Qy + (vvxz[ix][iy][iz] + bbxz[ix][iy][iz]) * Qz;
-			 fnvy = (vvyx[ix][iy][iz] + bbyx[ix][iy][iz] )* Qx + (vvyy[ix][iy][iz] + bbyy[ix][iy][iz]) * Qy + (vvyz[ix][iy][iz] + bbyz[ix][iy][iz]) * Qz;
-			 fnvz = (vvzx[ix][iy][iz] + bbzx[ix][iy][iz] )* Qx + (vvzy[ix][iy][iz] + bbzy[ix][iy][iz]) * Qy + (vvzz[ix][iy][iz] + bbzz[ix][iy][iz]) * Qz;
+					 fnbx = (bvxx[ix][iy][iz] - vbxx[ix][iy][iz] )* Qx + (bvxy[ix][iy][iz] - vbxy[ix][iy][iz]) * Qy + (bvxz[ix][iy][iz] - vbxz[ix][iy][iz]) * Qz;
+					 fnby = (bvyx[ix][iy][iz] - vbyx[ix][iy][iz] )* Qx + (bvyy[ix][iy][iz] - vbyy[ix][iy][iz]) * Qy + (bvyz[ix][iy][iz] - vbyz[ix][iy][iz]) * Qz;
+					 fnbz = (bvzx[ix][iy][iz] - vbzx[ix][iy][iz] )* Qx + (bvzy[ix][iy][iz] - vbzy[ix][iy][iz]) * Qy + (bvzz[ix][iy][iz] - vbzz[ix][iy][iz]) * Qz;
 
-			 fnbx = (bvxx[ix][iy][iz] - vbxx[ix][iy][iz] )* Qx + (bvxy[ix][iy][iz] - vbxy[ix][iy][iz]) * Qy + (bvxz[ix][iy][iz] - vbxz[ix][iy][iz]) * Qz;
-			 fnby = (bvyx[ix][iy][iz] - vbyx[ix][iy][iz] )* Qx + (bvyy[ix][iy][iz] - vbyy[ix][iy][iz]) * Qy + (bvyz[ix][iy][iz] - vbyz[ix][iy][iz]) * Qz;
-			 fnbz = (bvzx[ix][iy][iz] - vbzx[ix][iy][iz] )* Qx + (bvzy[ix][iy][iz] - vbzy[ix][iy][iz]) * Qy + (bvzz[ix][iy][iz] - vbzz[ix][iy][iz]) * Qz;
+					 fvn = fnvx*rnx + fnvy*rny + fnvz*rnz;
+					 fbn = fnbx*rnx + fnby*rny + fnbz*rnz;
 
-			 fvn = fnvx*rnx + fnvy*rny + fnvz*rnz;
-			 fbn = fnbx*rnx + fnby*rny + fnbz*rnz;
+					 fnvx-= fvn*rnx;
+					 fnvy-= fvn*rny;
+					 fnvz-= fvn*rnz;
 
-			 fnvx-= fvn*rnx;
-			 fnvy-= fvn*rny;
-			 fnvz-= fvn*rnz;
+					 fnbx-= fbn*rnx;
+					 fnby-= fbn*rny;
+					 fnbz-= fbn*rnz;
 
-			 fnbx-= fbn*rnx;
-			 fnby-= fbn*rny;
-			 fnbz-= fbn*rnz;
+					 aaa = 2.0*(rny*vx[ix][iy][iz] - omega*(rnx*vy[ix][iy][iz]-rny*vx[ix][iy][iz]));
+					 flvx =                  aaa*rnx - 2.0*omega*vy[ix][iy][iz] + Qbeta*bx[ix][iy][iz] - rnuk*Q2*vx[ix][iy][iz];
+					 flvy =-vx[ix][iy][iz] + aaa*rny + 2.0*omega*vx[ix][iy][iz] + Qbeta*by[ix][iy][iz] - rnuk*Q2*vy[ix][iy][iz];
+					 flvz =                  aaa*rnz                            + Qbeta*bz[ix][iy][iz] - rnuk*Q2*vz[ix][iy][iz];
 
-			 aaa = 2.0*(rny*vx[ix][iy][iz] - omega*(rnx*vy[ix][iy][iz]-rny*vx[ix][iy][iz]));
-			 flvx =                  aaa*rnx - 2.0*omega*vy[ix][iy][iz] + Qbeta*bx[ix][iy][iz] - rnuk*Q2*vx[ix][iy][iz];
-			 flvy =-vx[ix][iy][iz] + aaa*rny + 2.0*omega*vx[ix][iy][iz] + Qbeta*by[ix][iy][iz] - rnuk*Q2*vy[ix][iy][iz];
-			 flvz =                  aaa*rnz                            + Qbeta*bz[ix][iy][iz] - rnuk*Q2*vz[ix][iy][iz];
+					 flbx =      						 aaa*rnx - 2.0*omega*vy[ix][iy][iz] - Qbeta*vx[ix][iy][iz] - rnum*Q2*vx[ix][iy][iz];
+					 flby = bx[ix][iy][iz] + aaa*rny + 2.0*omega*vx[ix][iy][iz] - Qbeta*vy[ix][iy][iz] - rnum*Q2*vy[ix][iy][iz];
+					 flbz =      						 aaa*rnz                            - Qbeta*vz[ix][iy][iz] - rnum*Q2*vz[ix][iy][iz];
+					 
 
-			 flbx =      						 aaa*rnx - 2.0*omega*vy[ix][iy][iz] - Qbeta*vx[ix][iy][iz] - rnum*Q2*vx[ix][iy][iz];
-			 flby = bx[ix][iy][iz] + aaa*rny + 2.0*omega*vx[ix][iy][iz] - Qbeta*vy[ix][iy][iz] - rnum*Q2*vy[ix][iy][iz];
-			 flbz =      						 aaa*rnz                            - Qbeta*vz[ix][iy][iz] - rnum*Q2*vz[ix][iy][iz];
+					 fvn = flvx*rnx + flvy*rny + flvz*rnz;
+					 fbn = flbx*rnx + flby*rny + flbz*rnz;
 
-			 fvx[ix][iy][iz] = flvx+fnvx;
-			 fvy[ix][iy][iz] = flvy+fnvy;
-			 fvz[ix][iy][iz] = flvz+fnvz;
+					 flvx-= fvn*rnx;
+					 flvy-= fvn*rny;
+					 flvz-= fvn*rnz;
 
-			 fbx[ix][iy][iz] = flbx+fnbx;
-			 fby[ix][iy][iz] = flby+fnby;
-			 fbz[ix][iy][iz] = flbz+fnbz;
+					 flbx-= fbn*rnx;
+					 flby-= fbn*rny;
+					 flbz-= fbn*rnz;
 
-			}
-		}
-	}
 
+					 fvx[ix][iy][iz] = flvx+fnvx;
+					 fvy[ix][iy][iz] = flvy+fnvy;
+					 fvz[ix][iy][iz] = flvz+fnvz;
+
+					 fbx[ix][iy][iz] = flbx+fnbx;
+					 fby[ix][iy][iz] = flby+fnby;
+					 fbz[ix][iy][iz] = flbz+fnbz;
+					 
+					 vx[ix][iy][iz]+=fvx[ix][iy][iz]*dt; vy[ix][iy][iz]+=fvy[ix][iy][iz]*dt; vz[ix][iy][iz]+=fvz[ix][iy][iz]*dt;
+                     bx[ix][iy][iz]+=fbx[ix][iy][iz]*dt; by[ix][iy][iz]+=fby[ix][iy][iz]*dt; bz[ix][iy][iz]+=fbz[ix][iy][iz]*dt; 
+					 
+					 printf("v-> %g %g %g %i\n",vx[ix][iy][iz], vy[ix][iy][iz], vz[ix][iy][iz],it);
+					 printf("v-> %g %g %g %i\n",bx[ix][iy][iz], by[ix][iy][iz], bz[ix][iy][iz],it);
+					}//iz
+				}//iy
+			}//ix			
+		}//it
 	return 0;
-}
+}// main
