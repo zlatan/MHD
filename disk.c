@@ -119,15 +119,23 @@ int main(void)
 		}
 	}
 	// vvxx[ix][iy][iz] - exp(-.5*(Qx*Qx+Qy*Qy+Qz*Qz))/(sqrt(8.*M_PI)*sqrt(8.*M_PI)*sqrt(8.*M_PI));
-	
-	
-	double alpha=0.0;
+
+
+double alpha=0.0;
 double betax,betaz;
-double betay=0.0; 
+double betay=0.0;
 double omega=-2./3.;
 double fnvx,fnvy,fnvz,fnbx,fnby,fnbz;
+double Q2,Qbeta;
 
-betax = sin(alpha); 
+double fvx[NDimx][NDimy][NDimz];
+double fvy[NDimx][NDimy][NDimz];
+double fvz[NDimx][NDimy][NDimz];
+double fbx[NDimx][NDimy][NDimz];
+double fby[NDimx][NDimy][NDimz];
+double fbz[NDimx][NDimy][NDimz];
+
+betax = sin(alpha);
 betaz = cos(alpha);
 
 
@@ -138,11 +146,15 @@ betaz = cos(alpha);
 			for(int iz=0;iz<=Lz; iz++)
 			{double Qz=-Qz0+iz*DQz;
 
-             Q2=Qx*Qx+Qy*Qy+Qz*Qz;
-			 Q=sqrt(Q2)
+			 double fvn,fbn,aaa,fnvx,fnvy,fnvz,fnbx,fnby,fnbz,flvx,flvy,flvz,flbx,flby,flbz;
+			 double rnuk=0.001;
+			 double rnum=0.001;
+
+       Q2=Qx*Qx+Qy*Qy+Qz*Qz;
+			 Q=sqrt(Q2);
 			 rnx=Qx/Q; rny=Qy/Q; rnz=Qz/Q;
 			 Qbeta=Qx*betax+Qz*betaz; // betay=0.
-			 					 
+
 			 fnvx = (vvxx[ix][iy][iz] + bbxx[ix][iy][iz] )* Qx + (vvxy[ix][iy][iz] + bbxy[ix][iy][iz]) * Qy + (vvxz[ix][iy][iz] + bbxz[ix][iy][iz]) * Qz;
 			 fnvy = (vvyx[ix][iy][iz] + bbyx[ix][iy][iz] )* Qx + (vvyy[ix][iy][iz] + bbyy[ix][iy][iz]) * Qy + (vvyz[ix][iy][iz] + bbyz[ix][iy][iz]) * Qz;
 			 fnvz = (vvzx[ix][iy][iz] + bbzx[ix][iy][iz] )* Qx + (vvzy[ix][iy][iz] + bbzy[ix][iy][iz]) * Qy + (vvzz[ix][iy][iz] + bbzz[ix][iy][iz]) * Qz;
@@ -151,7 +163,7 @@ betaz = cos(alpha);
 			 fnby = (bvyx[ix][iy][iz] - vbyx[ix][iy][iz] )* Qx + (bvyy[ix][iy][iz] - vbyy[ix][iy][iz]) * Qy + (bvyz[ix][iy][iz] - vbyz[ix][iy][iz]) * Qz;
 			 fnbz = (bvzx[ix][iy][iz] - vbzx[ix][iy][iz] )* Qx + (bvzy[ix][iy][iz] - vbzy[ix][iy][iz]) * Qy + (bvzz[ix][iy][iz] - vbzz[ix][iy][iz]) * Qz;
 
-			 fvn = fnvx*rnx + fnvy*rny + fnvz*rnz; 
+			 fvn = fnvx*rnx + fnvy*rny + fnvz*rnz;
 			 fbn = fnbx*rnx + fnby*rny + fnbz*rnz;
 
 			 fnvx-=fvn*rnx;
@@ -162,27 +174,26 @@ betaz = cos(alpha);
 			 fnby-=fbn*rny;
 			 fnbz-=fbn*rnz;
 
-			 aaa=2.0*(ny*vx[ix][iy][iz] - omega*(nx*vy[ix][iy][iz]-ny*vx[ix][iy][iz]));
+			 aaa=2.0*(rny*vx[ix][iy][iz] - omega*(rnx*vy[ix][iy][iz]-rny*vx[ix][iy][iz]));
 			 flvx=                  aaa*rnx - 2.0*omega*vy[ix][iy][iz] + Qbeta*bx[ix][iy][iz] - rnuk*Q2*vx[ix][iy][iz];
 			 flvy=-vx[ix][iy][iz] + aaa*rny + 2.0*omega*vx[ix][iy][iz] + Qbeta*by[ix][iy][iz] - rnuk*Q2*vy[ix][iy][iz];
 			 flvz=                  aaa*rnz                            + Qbeta*bz[ix][iy][iz] - rnuk*Q2*vz[ix][iy][iz];
 
-			 flbx=      aaa*rnx - 2.0*omega*vy[ix][iy][iz] - Qbeta*vx[ix][iy][iz] - rnum*Q2*vx[ix][iy][iz];
-			 flby=+bx + aaa*rny + 2.0*omega*vx[ix][iy][iz] - Qbeta*vy[ix][iy][iz] - rnum*Q2*vy[ix][iy][iz];
-			 flbz=      aaa*rnz                            - Qbeta*vz[ix][iy][iz] - rnum*Q2*vz[ix][iy][iz];
+			 flbx=      						aaa*rnx - 2.0*omega*vy[ix][iy][iz] - Qbeta*vx[ix][iy][iz] - rnum*Q2*vx[ix][iy][iz];
+			 flby= bx[ix][iy][iz] + aaa*rny + 2.0*omega*vx[ix][iy][iz] - Qbeta*vy[ix][iy][iz] - rnum*Q2*vy[ix][iy][iz];
+			 flbz=      						aaa*rnz                            - Qbeta*vz[ix][iy][iz] - rnum*Q2*vz[ix][iy][iz];
 
-			 fvx[ix][iy][iz]=flvx+fnvx; 
-			 fvy[ix][iy][iz]=flvy+fnvy; 
-			 fvz[ix][iy][iz]=flvz+fnvz; 
+			 fvx[ix][iy][iz]=flvx+fnvx;
+			 fvy[ix][iy][iz]=flvy+fnvy;
+			 fvz[ix][iy][iz]=flvz+fnvz;
 
-			 fbx[ix][iy][iz]=flbx+fnbx; 
-			 fby[ix][iy][iz]=flby+fnby; 
+			 fbx[ix][iy][iz]=flbx+fnbx;
+			 fby[ix][iy][iz]=flby+fnby;
 			 fbz[ix][iy][iz]=flbz+fnbz;
-			 
+
 			}
 		}
 	}
 
 	return 0;
 }
-
