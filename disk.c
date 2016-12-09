@@ -45,7 +45,8 @@ int main(void)
 	double fbz[NDimx][NDimy][NDimz];
 	double rnuk=0.001;
 	double rnum=0.001;
-	double Tempi,Nt,dt,t,it;
+	double Tempi,Nt,dt,t;
+	int it;
 
 	betax = sin(alpha);
 	betaz = cos(alpha);
@@ -59,58 +60,68 @@ int main(void)
 			for (int iz=0;iz<=Lz; iz++)
 			{double Qz=-Qz0+iz*DQz;
 		        DV[ix][iy][iz]=DVQ;
-				bbxx[ix][iy][iz]=(rand()-.5)*1E-50;
-				bbxy[ix][iy][iz]=(rand()-.5)*1E-50; 
-				bbxz[ix][iy][iz]=(rand()-.5)*1E-50;
-				bbyx[ix][iy][iz]=(rand()-.5)*1E-50;
-				bbyy[ix][iy][iz]=(rand()-.5)*1E-50;
-				bbyz[ix][iy][iz]=(rand()-.5)*1E-50;
-				bbzx[ix][iy][iz]=(rand()-.5)*1E-50;
-				bbzy[ix][iy][iz]=(rand()-.5)*1E-50;
-				bbzz[ix][iy][iz]=(rand()-.5)*1E-50;
-				vvxx[ix][iy][iz]=(rand()-.5)*1E-50;
-				vvxy[ix][iy][iz]=(rand()-.5)*1E-50;
-				vvxz[ix][iy][iz]=(rand()-.5)*1E-50;
-				vvyx[ix][iy][iz]=(rand()-.5)*1E-50;
-				vvyy[ix][iy][iz]=(rand()-.5)*1E-50;
-				vvyz[ix][iy][iz]=(rand()-.5)*1E-50;
-				vvzx[ix][iy][iz]=(rand()-.5)*1E-50;
-				vvzy[ix][iy][iz]=(rand()-.5)*1E-50;
-				vvzz[ix][iy][iz]=(rand()-.5)*1E-50;
-				bvxx[ix][iy][iz]=(rand()-.5)*1E-50;
-				bvxy[ix][iy][iz]=(rand()-.5)*1E-50;
-				bvxz[ix][iy][iz]=(rand()-.5)*1E-50;
-				bvyx[ix][iy][iz]=(rand()-.5)*1E-50; 
-				bvyy[ix][iy][iz]=(rand()-.5)*1E-50; 
-				bvyz[ix][iy][iz]=(rand()-.5)*1E-50;
-				bvzx[ix][iy][iz]=(rand()-.5)*1E-50; 
-				bvzy[ix][iy][iz]=(rand()-.5)*1E-50; 
-				bvzz[ix][iy][iz]=(rand()-.5)*1E-50;
-				vbxx[ix][iy][iz]=(rand()-.5)*1E-50; 
-				vbxy[ix][iy][iz]=(rand()-.5)*1E-50;
-				vbxz[ix][iy][iz]=(rand()-.5)*1E-50;
-				vbyx[ix][iy][iz]=(rand()-.5)*1E-50;
-				vbyy[ix][iy][iz]=(rand()-.5)*1E-50;
-				vbyz[ix][iy][iz]=(rand()-.5)*1E-50;
-				vbzx[ix][iy][iz]=(rand()-.5)*1E-50; 
-				vbzy[ix][iy][iz]=(rand()-.5)*1E-50;
-				vbzz[ix][iy][iz]=(rand()-.5)*1E-50;
-				vx[ix][iy][iz]=exp(-(Qx*Qx+Qy*Qy+Qz*Qz));// inicializacija na skorosti
-				
+				bbxx[ix][iy][iz]=(rand()-.5)*1E-10;
+				bbxy[ix][iy][iz]=(rand()-.5)*1E-10;
+				bbxz[ix][iy][iz]=(rand()-.5)*1E-10;
+				bbyx[ix][iy][iz]=(rand()-.5)*1E-10;
+				bbyy[ix][iy][iz]=(rand()-.5)*1E-10;
+				bbyz[ix][iy][iz]=(rand()-.5)*1E-10;
+				bbzx[ix][iy][iz]=(rand()-.5)*1E-10;
+				bbzy[ix][iy][iz]=(rand()-.5)*1E-10;
+				bbzz[ix][iy][iz]=(rand()-.5)*1E-10;
+				vvxx[ix][iy][iz]=(rand()-.5)*1E-10;
+				vvxy[ix][iy][iz]=(rand()-.5)*1E-10;
+				vvxz[ix][iy][iz]=(rand()-.5)*1E-10;
+				vvyx[ix][iy][iz]=(rand()-.5)*1E-10;
+				vvyy[ix][iy][iz]=(rand()-.5)*1E-10;
+				vvyz[ix][iy][iz]=(rand()-.5)*1E-10;
+				vvzx[ix][iy][iz]=(rand()-.5)*1E-10;
+				vvzy[ix][iy][iz]=(rand()-.5)*1E-10;
+				vvzz[ix][iy][iz]=(rand()-.5)*1E-10;
+				bvxx[ix][iy][iz]=(rand()-.5)*1E-10;
+				bvxy[ix][iy][iz]=(rand()-.5)*1E-10;
+				bvxz[ix][iy][iz]=(rand()-.5)*1E-10;
+				bvyx[ix][iy][iz]=(rand()-.5)*1E-10;
+				bvyy[ix][iy][iz]=(rand()-.5)*1E-10;
+				bvyz[ix][iy][iz]=(rand()-.5)*1E-10;
+				bvzx[ix][iy][iz]=(rand()-.5)*1E-10;
+				bvzy[ix][iy][iz]=(rand()-.5)*1E-10;
+				bvzz[ix][iy][iz]=(rand()-.5)*1E-10;
+				vbxx[ix][iy][iz]=(rand()-.5)*1E-10;
+				vbxy[ix][iy][iz]=(rand()-.5)*1E-10;
+				vbxz[ix][iy][iz]=(rand()-.5)*1E-10;
+				vbyx[ix][iy][iz]=(rand()-.5)*1E-10;
+				vbyy[ix][iy][iz]=(rand()-.5)*1E-10;
+				vbyz[ix][iy][iz]=(rand()-.5)*1E-10;
+				vbzx[ix][iy][iz]=(rand()-.5)*1E-10;
+				vbzy[ix][iy][iz]=(rand()-.5)*1E-10;
+				vbzz[ix][iy][iz]=(rand()-.5)*1E-10;
+
+				// vx[ix][iy][iz]=exp(-(Qx*Qx+Qy*Qy+Qz*Qz));// inicializacija na skorosti
+
 				Q2=Qx*Qx+Qy*Qy+Qz*Qz;
 				Q=sqrt(Q2);
+				// printf("Q=%g\n",Q);
+				if ( ((ix - Nx)*(ix - Nx) + (iy-Ny)*(iy-Ny) + (iz-Nz)*(iz-Nz)) == 0 )
+				{
+					// printf("Zero -> Q=%g\n",Q);
+					// printf("ix-Nx=%i iy-Ny=%i iz-Nz=%i\n",ix-Nx,iy-Ny,iz-Nz);
+					continue;
+				}
 				rnx=Qx/Q; rny=Qy/Q; rnz=Qz/Q;
-				 
+
 				vn = vx[ix][iy][iz]*rnx + vy[ix][iy][iz]*rny + vz[ix][iy][iz]*rnz;
-				bn = bx[ix][iy][iz]*rnx + by[ix][iy][iz]*rny + bz[ix][iy][iz]*rnz;	
+				bn = bx[ix][iy][iz]*rnx + by[ix][iy][iz]*rny + bz[ix][iy][iz]*rnz;
 
 				vx[ix][iy][iz]-= vn*rnx;
 				vy[ix][iy][iz]-= vn*rny;
 				vz[ix][iy][iz]-= vn*rnz;
-				
+
 				bx[ix][iy][iz]-= bn*rnx;
 				by[ix][iy][iz]-= bn*rny;
 				bz[ix][iy][iz]-= bn*rnz;
+				// printf("%g %g %g %g %g %g\n",vvxx[ix][iy][iz],bbxx[ix][iy][iz],vvxy[ix][iy][iz],bbxy[ix][iy][iz],vvxz[ix][iy][iz],bbxz[ix][iy][iz]);
+
 			}
 		}
 	}
@@ -149,13 +160,17 @@ int main(void)
 												vbxx[ix][iy][iz]+=vx[jx][jy][jz]*bx[kx][ky][kz]*DV[jx][jy][jz]; vbxy[ix][iy][iz]+=vx[jx][jy][jz]*by[kx][ky][kz]*DV[jx][jy][jz]; vbxz[ix][iy][iz]+=vx[jx][jy][jz]*bz[kx][ky][kz]*DV[jx][jy][jz];
 												vbyx[ix][iy][iz]+=vy[jx][jy][jz]*bx[kx][ky][kz]*DV[jx][jy][jz]; vbyy[ix][iy][iz]+=vy[jx][jy][jz]*by[kx][ky][kz]*DV[jx][jy][jz]; vbyz[ix][iy][iz]+=vy[jx][jy][jz]*bz[kx][ky][kz]*DV[jx][jy][jz];
 												vbzx[ix][iy][iz]+=vz[jx][jy][jz]*bx[kx][ky][kz]*DV[jx][jy][jz]; vbzy[ix][iy][iz]+=vz[jx][jy][jz]*by[kx][ky][kz]*DV[jx][jy][jz]; vbzz[ix][iy][iz]+=vz[jx][jy][jz]*bz[kx][ky][kz]*DV[jx][jy][jz];
+
+												// printf("%g %g %g %g %g %g\n",vvxx[ix][iy][iz],bbxx[ix][iy][iz],vvxy[ix][iy][iz],bbxy[ix][iy][iz],vvxz[ix][iy][iz],bbxz[ix][iy][iz]);
+
 											}//kz
 										}//ky
 									}//kx
 								}//iz
 							}//iy
 						}//ix
-                         // krai na nelinejnata sila
+
+		 // krai na nelinejnata sila
 
 			for(int ix=0;ix<=Lx; ix++)
 			{double Qx=-Qx0+ix*DQx;
@@ -167,13 +182,22 @@ int main(void)
 					 double fvn,fbn,aaa,fnvx,fnvy,fnvz,fnbx,fnby,fnbz,flvx,flvy,flvz,flbx,flby,flbz;
 
 					 Q2=Qx*Qx+Qy*Qy+Qz*Qz;
+					 if ( ((ix - Nx)*(ix - Nx) + (iy-Ny)*(iy-Ny) + (iz-Nz)*(iz-Nz)) == 0 )
+					 {
+						 printf("Zero");
+						 continue;
+					 }
 					 Q=sqrt(Q2);
+					//  printf("Q=%g it=>%i",Q,it);
 					 rnx=Qx/Q; rny=Qy/Q; rnz=Qz/Q;
 					 Qbeta=Qx*betax+Qz*betaz; // betay=0.
 
 					 fnvx = (vvxx[ix][iy][iz] + bbxx[ix][iy][iz] )* Qx + (vvxy[ix][iy][iz] + bbxy[ix][iy][iz]) * Qy + (vvxz[ix][iy][iz] + bbxz[ix][iy][iz]) * Qz;
 					 fnvy = (vvyx[ix][iy][iz] + bbyx[ix][iy][iz] )* Qx + (vvyy[ix][iy][iz] + bbyy[ix][iy][iz]) * Qy + (vvyz[ix][iy][iz] + bbyz[ix][iy][iz]) * Qz;
 					 fnvz = (vvzx[ix][iy][iz] + bbzx[ix][iy][iz] )* Qx + (vvzy[ix][iy][iz] + bbzy[ix][iy][iz]) * Qy + (vvzz[ix][iy][iz] + bbzz[ix][iy][iz]) * Qz;
+
+					//  printf("fnvx=%g fnvy=%g fnvz=%g iteration=>%i\n",fnvx,fnvy,fnvz,it);
+					//  printf("rnx=%g rny=%g rnz=%g iteration=>%i\n",rnx,rny,rnz,it);
 
 					 fnbx = (bvxx[ix][iy][iz] - vbxx[ix][iy][iz] )* Qx + (bvxy[ix][iy][iz] - vbxy[ix][iy][iz]) * Qy + (bvxz[ix][iy][iz] - vbxz[ix][iy][iz]) * Qz;
 					 fnby = (bvyx[ix][iy][iz] - vbyx[ix][iy][iz] )* Qx + (bvyy[ix][iy][iz] - vbyy[ix][iy][iz]) * Qy + (bvyz[ix][iy][iz] - vbyz[ix][iy][iz]) * Qz;
@@ -182,9 +206,13 @@ int main(void)
 					 fvn = fnvx*rnx + fnvy*rny + fnvz*rnz;
 					 fbn = fnbx*rnx + fnby*rny + fnbz*rnz;
 
+					//  printf("fvn=%g it=>%i",fvn,it);
+
 					 fnvx-= fvn*rnx;
 					 fnvy-= fvn*rny;
 					 fnvz-= fvn*rnz;
+
+					//  printf("fnvx=%g fnvy=%g fnvz=%g iteration=>%i\n",fnvx,fnvy,fnvz,it);
 
 					 fnbx-= fbn*rnx;
 					 fnby-= fbn*rny;
@@ -198,10 +226,12 @@ int main(void)
 					 flbx =      						 aaa*rnx - 2.0*omega*vy[ix][iy][iz] - Qbeta*vx[ix][iy][iz] - rnum*Q2*vx[ix][iy][iz];
 					 flby = bx[ix][iy][iz] + aaa*rny + 2.0*omega*vx[ix][iy][iz] - Qbeta*vy[ix][iy][iz] - rnum*Q2*vy[ix][iy][iz];
 					 flbz =      						 aaa*rnz                            - Qbeta*vz[ix][iy][iz] - rnum*Q2*vz[ix][iy][iz];
-					 
+
 
 					 fvn = flvx*rnx + flvy*rny + flvz*rnz;
 					 fbn = flbx*rnx + flby*rny + flbz*rnz;
+
+					//  printf("fvn=%g fbn=%g iteration=>%i\n",fvn,fbn,it);
 
 					 flvx-= fvn*rnx;
 					 flvy-= fvn*rny;
@@ -211,23 +241,30 @@ int main(void)
 					 flby-= fbn*rny;
 					 flbz-= fbn*rnz;
 
+					//  printf("flvx=%g flvy=%g flvz=%g iteration=>%i\n",flvx,flvy,flvz,it);
+
 
 					 fvx[ix][iy][iz] = flvx+fnvx;
 					 fvy[ix][iy][iz] = flvy+fnvy;
 					 fvz[ix][iy][iz] = flvz+fnvz;
 
+					//  printf("x->%g y->%g z->%g \n",fvx[ix][iy][iz],fvy[ix][iy][iz],fvy[ix][iy][iz]);
+
 					 fbx[ix][iy][iz] = flbx+fnbx;
 					 fby[ix][iy][iz] = flby+fnby;
 					 fbz[ix][iy][iz] = flbz+fnbz;
-					 
+
 					 vx[ix][iy][iz]+=fvx[ix][iy][iz]*dt; vy[ix][iy][iz]+=fvy[ix][iy][iz]*dt; vz[ix][iy][iz]+=fvz[ix][iy][iz]*dt;
-                     bx[ix][iy][iz]+=fbx[ix][iy][iz]*dt; by[ix][iy][iz]+=fby[ix][iy][iz]*dt; bz[ix][iy][iz]+=fbz[ix][iy][iz]*dt; 
-					 
+           bx[ix][iy][iz]+=fbx[ix][iy][iz]*dt; by[ix][iy][iz]+=fby[ix][iy][iz]*dt; bz[ix][iy][iz]+=fbz[ix][iy][iz]*dt;
+
+					//  printf("f-> %g %g %g %i\n",fbx[ix][iy][iz], fby[ix][iy][iz], fbz[ix][iy][iz],it);
+
 					 printf("v-> %g %g %g %i\n",vx[ix][iy][iz], vy[ix][iy][iz], vz[ix][iy][iz],it);
-					 printf("v-> %g %g %g %i\n",bx[ix][iy][iz], by[ix][iy][iz], bz[ix][iy][iz],it);
+					 printf("b-> %g %g %g %i\n",bx[ix][iy][iz], by[ix][iy][iz], bz[ix][iy][iz],it);
+					 
 					}//iz
 				}//iy
-			}//ix			
+			}//ix
 		}//it
 	return 0;
 }// main
