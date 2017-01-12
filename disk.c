@@ -48,6 +48,10 @@ int main(void)
 	double Tempi,Nt,dt,t;
 	int it;
 
+
+  double Ei[NDimx][NDimy][NDimz];
+	double Ef[NDimx][NDimy][NDimz];
+
 	betax = sin(alpha);
 	betaz = cos(alpha);
 
@@ -126,7 +130,7 @@ int main(void)
 		}
 	}
 
-		Tempi=10.; Nt=100; dt=Tempi/Nt;
+		Tempi=10.; Nt=2; dt=Tempi/Nt;
         // nachalo na integrirane po vreme; tuk se vyrti
 		for(it=1;it<=Nt; it++)
 		{t=it*dt;
@@ -258,13 +262,41 @@ int main(void)
            bx[ix][iy][iz]+=fbx[ix][iy][iz]*dt; by[ix][iy][iz]+=fby[ix][iy][iz]*dt; bz[ix][iy][iz]+=fbz[ix][iy][iz]*dt;
 
 					//  printf("f-> %g %g %g %i\n",fbx[ix][iy][iz], fby[ix][iy][iz], fbz[ix][iy][iz],it);
+						if (it == 1)
+						{
+							Ei[ix][iy][iz] = vx[ix][iy][iz]*vx[ix][iy][iz] + vy[ix][iy][iz]*vy[ix][iy][iz] + vz[ix][iy][iz]*vz[ix][iy][iz] + bx[ix][iy][iz]*bx[ix][iy][iz] + by[ix][iy][iz]*by[ix][iy][iz] + bz[ix][iy][iz]*bz[ix][iy][iz];
+						}
 
-					 printf("v-> %g %g %g %i\n",vx[ix][iy][iz], vy[ix][iy][iz], vz[ix][iy][iz],it);
-					 printf("b-> %g %g %g %i\n",bx[ix][iy][iz], by[ix][iy][iz], bz[ix][iy][iz],it);
-					 
+						if (it == 2)
+						{
+							Ef[ix][iy][iz] = vx[ix][iy][iz]*vx[ix][iy][iz] + vy[ix][iy][iz]*vy[ix][iy][iz] + vz[ix][iy][iz]*vz[ix][iy][iz] + bx[ix][iy][iz]*bx[ix][iy][iz] + by[ix][iy][iz]*by[ix][iy][iz] + bz[ix][iy][iz]*bz[ix][iy][iz];
+						}
+					//  printf("(v^2(Q) + b^2(Q))[t]-> %g %g %i\n",vx[ix][iy][iz]*vx[ix][iy][iz] + vy[ix][iy][iz]*vy[ix][iy][iz] + vz[ix][iy][iz]*vz[ix][iy][iz] + bx[ix][iy][iz]*bx[ix][iy][iz] + by[ix][iy][iz]*by[ix][iy][iz] + bz[ix][iy][iz]*bz[ix][iy][iz],Q,it);
 					}//iz
 				}//iy
 			}//ix
 		}//it
+
+
+					for(int ix=0;ix<=Lx; ix++)
+					{double Qx=-Qx0+ix*DQx;
+					// 	for(int iy=0;iy<=Ly; iy++)
+					// 	{double Qy=-Qy0+iy*DQy;
+							for(int iz=0;iz<=Lz; iz++)
+							{double Qz=-Qz0+iz*DQz;
+								// if ( ((ix - Nx)*(ix - Nx) + (iy-Ny)*(iy-Ny) + (iz-Nz)*(iz-Nz)) == 0 )
+								// {
+								// 	// printf("Zero");
+								// 	continue;
+								// }
+								printf("%g %g %g\n",Qx,Qz,0.1*log(Ef[ix][5][iz]/Ei[ix][5][iz]));
+							}//iz
+					// 	}//iy
+					}//ix
+
+
+
+
+
 	return 0;
 }// main
