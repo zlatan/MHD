@@ -1,0 +1,3 @@
+gcc -Wall -I/usr/local/include -c eigenvalues.c 
+gcc -L/usr/local/lib eigenvalues.o -lgsl -lgslcblas -lm
+
