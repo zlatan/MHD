@@ -1,14 +1,20 @@
 #include <stdio.h>
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_eigen.h>
+#include <gsl/gsl_complex_math.h>
 
 int main (void)
 {
+
+
   double Qa=0.6;
-  double nx=0.2;
-  double ny=0.4;
-  double nz=0.3;
-  double w=-3.0/2;
+  double nx=0.0;
+  double ny=0.0;
+  double nz=0.0;
+  double w=-2.0/3;
+
+  for(Qa=0.0;Qa<8.14;Qa=Qa+0.1)
+  {
   double data[] = { 0.0, 0.0, 0.0, -Qa, 0.0, 0.0,
                     1.0, 0.0, 0.0, 0.0, -Qa, 0.0,
                     0.0, 0.0, 0.0, 0.0, 0.0, -Qa, 
@@ -26,19 +32,28 @@ int main (void)
   
   {
     int i;
-
+    double tmp[7];
     for (i = 0; i < 6; i++)
-      {
+      { 
         double eval_i = gsl_vector_get (eval, i);
         gsl_vector_view evec_i = gsl_matrix_column (evec, i);
-        printf ("eigenvalue = %g\n", eval_i);
-        printf ("eigenvector = \n");
-        gsl_vector_fprintf (stdout, &evec_i.vector, "%g");
+	tmp[i] = eval_i*eval_i;
+        //printf ("%g %g\n",Qa,eval_i);
+
+        //printf ("eigenvector = \n");
+        //gsl_vector_fprintf (stdout, &evec_i.vector, "%g");
       }
+    tmp[7]=tmp[0];
+    for (i = 0; i < 6; i++)
+      { 
+       if ( tmp[i] > tmp[7] )
+	tmp[7] = tmp[i];
+      }
+     printf ("%g %g\n",Qa,tmp[7]);
   }
 
   gsl_vector_free (eval);
   gsl_matrix_free (evec);
-
+  }
   return 0;
 }
