@@ -105,28 +105,28 @@ int main(void)
 					 Qbeta=Qx*betax+Qz*betaz; // betay=0.
 
 
-
+					/////////////////////////////////////////////////////////////////////////////////////////
 					 aaa = 2.0*( - omega*(rnx*vy[ix][iy][iz]-rny*vx[ix][iy][iz]));
 					 flvx =                  aaa*rnx - 2.0*omega*vy[ix][iy][iz] + Qbeta*bx[ix][iy][iz] - rnuk*Q2*vx[ix][iy][iz];
-					 flvy = aaa*rny + 2.0*omega*vx[ix][iy][iz] + Qbeta*by[ix][iy][iz] - rnuk*Q2*vy[ix][iy][iz];
+					 flvy = -vx[ix][iy][iz]*rny + 2.0*omega*vx[ix][iy][iz] + Qbeta*by[ix][iy][iz] - rnuk*Q2*vy[ix][iy][iz];
 					 flvz =                  aaa*rnz                            + Qbeta*bz[ix][iy][iz] - rnuk*Q2*vz[ix][iy][iz];
 
 					 flbx =      	       - Qbeta*vx[ix][iy][iz] - rnum*Q2*vx[ix][iy][iz];
 					 flby = bx[ix][iy][iz] - Qbeta*vy[ix][iy][iz] - rnum*Q2*vy[ix][iy][iz];
 					 flbz =      	       - Qbeta*vz[ix][iy][iz] - rnum*Q2*vz[ix][iy][iz];
-
+					/////////////////////////////////////////////////////////////////////////////////////////
 
 					 fvn = flvx*rnx + flvy*rny + flvz*rnz;
 					 fbn = flbx*rnx + flby*rny + flbz*rnz;
 					 printf("Qx=%g \t Qy=%g \t Qz=%g \t fvn=%g \t fbn=%g \n",Qx,Qy,Qz,fvn,fbn);
 
-					 flvx-= fvn*rnx;
-					 flvy-= fvn*rny;
-					 flvz-= fvn*rnz;
+					 flvx = flvx - fvn*rnx;
+					 flvy = flvy - fvn*rny;
+					 flvz = flvz - fvn*rnz;
 
-					 flbx-= fbn*rnx;
-					 flby-= fbn*rny;
-					 flbz-= fbn*rnz;
+					 flbx = flbx - fbn*rnx;
+					 flby = flby - fbn*rny;
+					 flbz = flbz - fbn*rnz;
 
 					 vx[ix][iy][iz]+=flvx*dt; vy[ix][iy][iz]+=flvy*dt; vz[ix][iy][iz]+=flvz*dt;
            				 bx[ix][iy][iz]+=flbx*dt; by[ix][iy][iz]+=flby*dt; bz[ix][iy][iz]+=flbz*dt;

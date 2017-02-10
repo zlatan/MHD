@@ -223,8 +223,8 @@ int main(void)
 					 fnbz-= fbn*rnz;
 
 					 aaa = 2.0*(rny*vx[ix][iy][iz] - omega*(rnx*vy[ix][iy][iz]-rny*vx[ix][iy][iz]));
-					 flvx =                  aaa*rnx - 2.0*omega*vy[ix][iy][iz] + Qbeta*bx[ix][iy][iz] - rnuk*Q2*vx[ix][iy][iz];
-					 flvy =-vx[ix][iy][iz] + aaa*rny + 2.0*omega*vx[ix][iy][iz] + Qbeta*by[ix][iy][iz] - rnuk*Q2*vy[ix][iy][iz];
+					 flvx =                  aaa*rnx + 2.0*omega*vy[ix][iy][iz] + Qbeta*bx[ix][iy][iz] - rnuk*Q2*vx[ix][iy][iz];
+					 flvy =-vx[ix][iy][iz] + aaa*rny - 2.0*omega*vx[ix][iy][iz] + Qbeta*by[ix][iy][iz] - rnuk*Q2*vy[ix][iy][iz];
 					 flvz =                  aaa*rnz                            + Qbeta*bz[ix][iy][iz] - rnuk*Q2*vz[ix][iy][iz];
 
 					 flbx =      						 aaa*rnx - 2.0*omega*vy[ix][iy][iz] - Qbeta*vx[ix][iy][iz] - rnum*Q2*vx[ix][iy][iz];

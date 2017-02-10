@@ -5,8 +5,8 @@
 int main(void)
 {
 
-	double Qx0=6.0, Qy0=6.0, Qz0=6.0;
-	int  Nz=10;
+	double Qx0=2.0, Qy0=2.0, Qz0=2.0;
+	int  Nz=100;
 	int  NDim=2*Nz+2;
 	double vx[NDim], vy[NDim], vz[NDim];
 	double bx[NDim], by[NDim], bz[NDim];
@@ -52,8 +52,10 @@ int main(void)
 				bx[iz] = 1.0;
 				by[iz] = 1.0;
 				bz[iz] = 0.0;
+
 				// printf("%g %g %g %g %g %g\n",vvxx[iz],bbxx[iz],vvxy[iz],bbxy[iz],vvxz[iz],bbxz[iz]);
 				Ei[iz] = vx[iz]*vx[iz] + vy[iz]*vy[iz]  + bx[iz]*bx[iz] + by[iz]*by[iz];
+				
 			}
 
 		Tempi=25.0; Nt=1000; dt=Tempi/Nt;
@@ -69,27 +71,14 @@ int main(void)
 					 Qbeta=Qz*betaz; // betay=0.
 
 
-					 aaa = 2.0*(rny*vx[iz] - omega*(rnx*vy[iz]-rny*vx[iz]));
-					 flvx =                  aaa*rnx - 2.0*omega*vy[iz] + Qbeta*bx[iz] - rnuk*Q2*vx[iz];
-					 flvy =-vx[iz] + aaa*rny + 2.0*omega*vx[iz] + Qbeta*by[iz] - rnuk*Q2*vy[iz];
-					 flvz =                  aaa*rnz                            + Qbeta*bz[iz] - rnuk*Q2*vz[iz];
 
-					 flbx =      	       - Qbeta*vx[iz] - rnum*Q2*vx[iz];
-					 flby = bx[iz] - Qbeta*vy[iz] - rnum*Q2*vy[iz];
-					 flbz =      	       - Qbeta*vz[iz] - rnum*Q2*vz[iz];
+					 flvx =         + 2.0*omega*vy[iz] + Qbeta*bx[iz];
+					 flvy =-vx[iz]  - 2.0*omega*vx[iz] + Qbeta*by[iz];
+					 flvz =             		   + Qbeta*bz[iz];
 
-
-					 fvn = flvx*rnx + flvy*rny + flvz*rnz;
-					 fbn = flbx*rnx + flby*rny + flbz*rnz;
-
-
-					 flvx-= fvn*rnx;
-					 flvy-= fvn*rny;
-					 flvz-= fvn*rnz;
-
-					 flbx-= fbn*rnx;
-					 flby-= fbn*rny;
-					 flbz-= fbn*rnz;
+					 flbx =        - Qbeta*vx[iz];
+					 flby = bx[iz] - Qbeta*vy[iz];
+					 flbz =        - Qbeta*vz[iz];
 
 					 vx[iz]+=flvx*dt; vy[iz]+=flvy*dt; vz[iz]+=flvz*dt;
            				 bx[iz]+=flbx*dt; by[iz]+=flby*dt; bz[iz]+=flbz*dt;
