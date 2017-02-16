@@ -6,7 +6,7 @@ int main(void)
 {
 
 	double Qx0=20., Qy0=3., Qz0=3.;
-	Qx0=Qy0=Qz0=3.;// xxxx
+	Qx0=Qy0=Qz0=.;// xxxx
 	int Nx=30, Ny=6, Nz=6;
 	Nx=10, Ny=10, Nz=10;//****
 	int NDimx=2*Nx+2, NDimy=2*Ny+2, NDimz=2*Nz+2;
@@ -43,8 +43,8 @@ int main(void)
 	double fbx[NDimx][NDimy][NDimz];
 	double fby[NDimx][NDimy][NDimz];
 	double fbz[NDimx][NDimy][NDimz];
-	double rnuk=0.001;
-	double rnum=0.001;
+	double rnuk=0.01;
+	double rnum=0.01;
 	double Tempi,Nt,dt,t;
 	int it;
 
@@ -300,7 +300,7 @@ int main(void)
 								// 	// printf("Zero");
 								// 	continue;
 								// }
-								printf("%g %g %g\n",Qx,Qz,pow( (1/(2.0*Tempi))*log(Ef[ix][5][iz]/Ei[ix][5][iz]),2));
+								printf("%g %g %g\n",Qx,Qz,pow( (1/(2.0*Tempi))*log(Ef[ix][Ny][iz]/Ei[ix][Ny][iz]),2));
  
 							}//iz
 					// 	}//iy
