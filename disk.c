@@ -64,6 +64,7 @@ int main(void)
 			for (int iz=0;iz<=Lz; iz++)
 			{double Qz=-Qz0+iz*DQz;
 		        DV[ix][iy][iz]=DVQ;
+/*
 				bbxx[ix][iy][iz]=(rand()-.5)*1E-10;
 				bbxy[ix][iy][iz]=(rand()-.5)*1E-10;
 				bbxz[ix][iy][iz]=(rand()-.5)*1E-10;
@@ -100,6 +101,16 @@ int main(void)
 				vbzx[ix][iy][iz]=(rand()-.5)*1E-10;
 				vbzy[ix][iy][iz]=(rand()-.5)*1E-10;
 				vbzz[ix][iy][iz]=(rand()-.5)*1E-10;
+*/
+
+				vx[ix][iy][iz] = 1.0;
+				vy[ix][iy][iz] = 1.0;
+				vz[ix][iy][iz] = 0.0;
+
+				bx[ix][iy][iz] = 1.0;
+				by[ix][iy][iz] = 1.0;
+				bz[ix][iy][iz] = 0.0;
+
 
 				// vx[ix][iy][iz]=exp(-(Qx*Qx+Qy*Qy+Qz*Qz));// inicializacija na skorosti
 
@@ -227,9 +238,9 @@ int main(void)
 					 flvy =-vx[ix][iy][iz] + aaa*rny - 2.0*omega*vx[ix][iy][iz] + Qbeta*by[ix][iy][iz] - rnuk*Q2*vy[ix][iy][iz];
 					 flvz =                  aaa*rnz                            + Qbeta*bz[ix][iy][iz] - rnuk*Q2*vz[ix][iy][iz];
 
-					 flbx =      						 aaa*rnx - 2.0*omega*vy[ix][iy][iz] - Qbeta*vx[ix][iy][iz] - rnum*Q2*vx[ix][iy][iz];
-					 flby = bx[ix][iy][iz] + aaa*rny + 2.0*omega*vx[ix][iy][iz] - Qbeta*vy[ix][iy][iz] - rnum*Q2*vy[ix][iy][iz];
-					 flbz =      						 aaa*rnz                            - Qbeta*vz[ix][iy][iz] - rnum*Q2*vz[ix][iy][iz];
+					 flbx =    		- Qbeta*vx[ix][iy][iz] - rnum*Q2*vx[ix][iy][iz];
+					 flby = bx[ix][iy][iz]  - Qbeta*vy[ix][iy][iz] - rnum*Q2*vy[ix][iy][iz];
+					 flbz =    		- Qbeta*vz[ix][iy][iz] - rnum*Q2*vz[ix][iy][iz];
 
 
 					 fvn = flvx*rnx + flvy*rny + flvz*rnz;
@@ -289,7 +300,8 @@ int main(void)
 								// 	// printf("Zero");
 								// 	continue;
 								// }
-								printf("%g %g %g\n",Qx,Qz,0.1*log(Ef[ix][5][iz]/Ei[ix][5][iz]));
+								printf("%g %g %g\n",Qx,Qz,pow( (1/(2.0*Tempi))*log(Ef[ix][5][iz]/Ei[ix][5][iz]),2));
+ 
 							}//iz
 					// 	}//iy
 					}//ix
