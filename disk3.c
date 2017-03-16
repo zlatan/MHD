@@ -4,6 +4,8 @@
 
 int main(void)
 {
+	double A=1.0;
+	double C=1.0;
 
 	double Qx0=3.0, Qy0=3.0, Qz0=3.0;
 	int  Nz=100;
@@ -29,8 +31,8 @@ int main(void)
 	double fbx[NDim];
 	double fby[NDim];
 	double fbz[NDim];
-	double rnuk=0.001;
-	double rnum=0.001;
+	double rnuk=0.1;
+	double rnum=0.1;
 	double Tempi,Nt,dt,t;
 	int it;
 
@@ -58,11 +60,10 @@ int main(void)
 
 				// printf("%g %g %g %g %g %g\n",vvxx[iz],bbxx[iz],vvxy[iz],bbxy[iz],vvxz[iz],bbxz[iz]);
 				Ei[iz] = vx[iz]*vx[iz] + vy[iz]*vy[iz]  + bx[iz]*bx[iz] + by[iz]*by[iz];
-
 			}
 
 		Tempi=25.0; Nt=10000; dt=Tempi/Nt;
-	// Tempi=25.0; Nt=100; dt=Tempi/Nt;
+//	 Tempi=25.0; Nt=100; dt=Tempi/Nt;
 
         // nachalo na integrirane po vreme; tuk se vyrti
 		for(it=1;it<=Nt; it++)
@@ -76,21 +77,26 @@ int main(void)
 
 					 Qbeta=Qz*betaz; // betay=0.
 
+					 flvx =           + 2.0*omega*vy[iz] + Qz*bx[iz]*C - rnuk*Qz*Qz*vx[iz];
+					 flvy =-vx[iz]*A  - 2.0*omega*vx[iz] + Qz*by[iz]*C - rnuk*Qz*Qz*vy[iz];
+					 flvz =             		    Qz*bz[iz]*C - rnuk*Qz*Qz*vz[iz];
+
+					 flbx =        - Qz*vx[iz]*C - rnum*Qz*Qz*bx[iz];
+					 flby = bx[iz]*A - Qz*vy[iz]*C - rnum*Qz*Qz*by[iz];
+					 flbz =        - Qz*vz[iz]*C - rnum*Qz*Qz*bz[iz];
 
 
-					 flvx =         + 2.0*omega*vy[iz] + Qbeta*bx[iz] - rnuk*Qz*Qz*vx[iz];
-					 flvy =-vx[iz]  - 2.0*omega*vx[iz] + Qbeta*by[iz] - rnuk*Qz*Qz*vy[iz];
-					 flvz =             		   + Qbeta*bz[iz] - rnuk*Qz*Qz*vz[iz];
+					 vx[iz]+=flvx*dt; 
+					 vy[iz]+=flvy*dt; 
+					 vz[iz]+=flvz*dt;
 
-					 flbx =        - Qbeta*vx[iz] - rnum*Qz*Qz*bx[iz];
-					 flby = bx[iz] - Qbeta*vy[iz] - rnum*Qz*Qz*by[iz];
-					 flbz =        - Qbeta*vz[iz] - rnum*Qz*Qz*bz[iz];
+   				     bx[iz]+=flbx*dt; 
+					 by[iz]+=flby*dt;
+					 bz[iz]+=flbz*dt;
 
-					 vx[iz]+=flvx*dt; vy[iz]+=flvy*dt; vz[iz]+=flvz*dt;
-   				 bx[iz]+=flbx*dt; by[iz]+=flby*dt; bz[iz]+=flbz*dt;
-
-					Ef[iz] = vx[iz]*vx[iz] + vy[iz]*vy[iz] + bx[iz]*bx[iz] + by[iz]*by[iz];
+					 Ef[iz] = vx[iz]*vx[iz] + vy[iz]*vy[iz] + bx[iz]*bx[iz] + by[iz]*by[iz];
 					}//iz
+				 //printf("%g %g\n",t,bx[0]);
 
 		}//it
 
@@ -99,11 +105,14 @@ int main(void)
 							{
 							 double Qz=-Qz0+iz*DQ;
 							//printf("%g %g\n",Qz,v[iz]);
-							printf("%g %g\n",Qz, pow( (1/(2.0*Tempi))*log(Ef[iz]/Ei[iz]),2) );
+							 printf("%g %g\n",Qz, (1/(2.0*Tempi))*log(Ef[iz]/Ei[iz]) );
 							}
 
 	//printf("%g\n",(-1/Tempi)*log(v[Lz]/v[0]));
-
+// p "../../vasko/MHD/disk3.out" w l
 
 	return 0;
 }// main
+
+
+
