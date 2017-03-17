@@ -12,6 +12,7 @@ int main(void)
 	int  NDim=2*Nz+2;
 	double vx[NDim], vy[NDim], vz[NDim];
 	double bx[NDim], by[NDim], bz[NDim];
+	double bbzz[NDim], vvzz[NDim], bvzz[NDim], vbzz[NDim];
 	double v[NDim];
 	double DV[NDim];
 	int  Lz=2*Nz;
@@ -69,6 +70,23 @@ int main(void)
 		for(it=1;it<=Nt; it++)
 		{t=it*dt;
 
+////////////////////////////////////////////////////////////////////
+
+						for (int iz=0;iz<=Lz; iz++)
+								{double Qz=-Qz0+iz*DQ;
+									// summation cycles for nonlinear terms
+											for (int jz=0;jz<=Lz; jz++)
+											{// razgele, naj setne zapoichvame rabota
+											 int kz=iz-jz+Nz; if(kz<0) continue; if(kz>Lz) continue;
+											 bbzz[iz]+=bz[jz]*bz[kz]*DV[jz];
+											 vvzz[iz]+=vz[jz]*vz[kz]*DV[jz];
+											 bvzz[iz]+=bz[jz]*vz[kz]*DV[jz];
+										   vbzz[iz]+=vz[jz]*bz[kz]*DV[jz];
+											}//kz
+								}//iz
+
+///////////////////////////////////////
+
 					for(int iz=0;iz<=Lz; iz++)
 					{double Qz=-Qz0+iz*DQ;
 
@@ -77,22 +95,36 @@ int main(void)
 
 					 Qbeta=Qz*betaz; // betay=0.
 
-					 flvx =           + 2.0*omega*vy[iz] + Qz*bx[iz]*C - rnuk*Qz*Qz*vx[iz];
-					 flvy =-vx[iz]*A  - 2.0*omega*vx[iz] + Qz*by[iz]*C - rnuk*Qz*Qz*vy[iz];
-					 flvz =             		    Qz*bz[iz]*C - rnuk*Qz*Qz*vz[iz];
 
-					 flbx =        - Qz*vx[iz]*C - rnum*Qz*Qz*bx[iz];
-					 flby = bx[iz]*A - Qz*vy[iz]*C - rnum*Qz*Qz*by[iz];
-					 flbz =        - Qz*vz[iz]*C - rnum*Qz*Qz*bz[iz];
+					 fnvz = (vvzz[iz] + bbzz[iz])*Qz;
+					 fnbz = (bvzz[iz] - vbzz[iz])*Qz;
+
+					 fvn = fnvz;
+					 fbn = fnbz;
+
+					 fnvz-= fvn;
+  				 fnbz-= fbn;
 
 
-					 vx[iz]+=flvx*dt; 
-					 vy[iz]+=flvy*dt; 
-					 vz[iz]+=flvz*dt;
+					 flvx =           + 2.0*omega*vy[iz] + Qz*bx[iz] - rnuk*Qz*Qz*vx[iz];
+					 flvy =-vx[iz]    - 2.0*omega*vx[iz] + Qz*by[iz] - rnuk*Qz*Qz*vy[iz];
+					 flvz =             		               Qz*bz[iz] - rnuk*Qz*Qz*vz[iz];
 
-   				     bx[iz]+=flbx*dt; 
-					 by[iz]+=flby*dt;
-					 bz[iz]+=flbz*dt;
+					 flbx =        - Qz*vx[iz] - rnum*Qz*Qz*bx[iz];
+					 flby = bx[iz] - Qz*vy[iz] - rnum*Qz*Qz*by[iz];
+					 flbz =        - Qz*vz[iz] - rnum*Qz*Qz*bz[iz];
+
+
+///////////////////////////////////////////////////////////////////////////////////////
+
+flvz-= fvn;
+flbz-= fbn;
+
+////////////////////////////////////////////////////////////////////////////////////////
+
+
+					 vx[iz]+=flvx*dt;					 vy[iz]+=flvy*dt;					 vz[iz]+=(flvz+fnvz)*dt;
+			     bx[iz]+=flbx*dt;					 by[iz]+=flby*dt;					 bz[iz]+=(flbz+fnbz)*dt;
 
 					 Ef[iz] = vx[iz]*vx[iz] + vy[iz]*vy[iz] + bx[iz]*bx[iz] + by[iz]*by[iz];
 					}//iz
@@ -105,7 +137,8 @@ int main(void)
 							{
 							 double Qz=-Qz0+iz*DQ;
 							//printf("%g %g\n",Qz,v[iz]);
-							 printf("%g %g\n",Qz, (1/(2.0*Tempi))*log(Ef[iz]/Ei[iz]) );
+							//  printf("%g %g\n",Qz, (1/(2.0*Tempi))*log(Ef[iz]/Ei[iz]) );
+							printf("%g %g\n",Qz,Ef[iz]);
 							}
 
 	//printf("%g\n",(-1/Tempi)*log(v[Lz]/v[0]));
@@ -113,6 +146,3 @@ int main(void)
 
 	return 0;
 }// main
-
-
-
