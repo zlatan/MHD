@@ -110,5 +110,35 @@ Q_z
  \end{array} \right)
 \end{eqnarray}
 
+\newpage 
+In the matrix form the system of MHD equations reads as
+
+\begin{equation}
+\mathrm{D}_\tau\Psi=\mathsf{M}\Psi + \mathsf{N},
+\end{equation}
+
+\begin{equation}
+\mathsf{M} =
+\left(\begin{array}{ccc|ccc}
+-\nu^\prime_\mathrm{m}Q^2 & 0 & 0 & -Q_\alpha& 0 & 0\\
+1 & -\nu^\prime_\mathrm{m}Q^2 & 0 & 0 & -Q_\alpha & 0 \\
+0 & 0& -\nu^\prime_\mathrm{m}Q^2  & 0 & 0 & -Q_\alpha\\
+\hline
+Q_\alpha& 0 & 0 & 2n_yn_x(\omega+1)-\nu^\prime_\mathrm{k}Q^2 & -2n_xn_x\omega+2\omega & 0 \\
+0 & Q_\alpha & 0 &2n_yn_y(\omega+1) -(2\omega+1) & -2n_xn_y\omega -\nu^\prime_\mathrm{k}Q^2 & 0 \\
+0 & 0 & Q_\alpha & 2n_yn_z(\omega+1) & -2n_xn_z \omega  & -\nu^\prime_\mathrm{k}Q^2
+\end{array}\right),\qquad
+\Psi_\mathbf{Q}=\left(\begin{array}{c}
+            b_x\\
+	    b_y\\
+	    b_z\\
+	    v_x\\
+	    v_y\\
+	    v_z
+           \end{array}\right)
+\end{equation}
+%
+and $Q_\alpha\equiv\mathbf{Q}\cdot\boldsymbol{\alpha}.$
+
 
 \end{document}
