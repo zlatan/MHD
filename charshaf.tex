@@ -92,21 +92,21 @@ Q_z
  -n_{zx} & -n_{zy} & 1-n_{zz} 
 \end{array} \right)
 \left(\begin{array}{c}
- bv^{xx}Q_x +bv^{xy}Q_y + bv^{xz}Q_z \\
- bv^{yx}Q_x +bv^{yy}Q_y + bv^{yz}Q_z  \\
- bv^{zx}Q_x +bv^{zy}Q_y + bv^{zz}Q_z
- \end{array} \right), bv^{ij}=(b_\mathbf{Q}^i v_{\mathbf{Q}-\mathbf{Q}'}^j - v_\mathbf{Q}^i b_{\mathbf{Q}-\mathbf{Q}'}^j) \\
+ M^{xx}Q_x +M^{xy}Q_y + M^{xz}Q_z \\
+ M^{yx}Q_x +M^{yy}Q_y + M^{yz}Q_z  \\
+ M^{zx}Q_x +M^{zy}Q_y + M^{zz}Q_z
+ \end{array} \right), M^{ij}=(b_\mathbf{Q}^i v_{\mathbf{Q}-\mathbf{Q}'}^j - v_\mathbf{Q}^i b_{\mathbf{Q}-\mathbf{Q}'}^j) \\
   \mathbf{N}_b &=&
 \left(\begin{array}{c}
- (1-n_{xx})(bv^{xx}Q_x +bv^{xy}Q_y + bv^{xz}Q_z) - n_{xy}(bv^{yx}Q_x +bv^{yy}Q_y + bv^{yz}Q_z) - n_{xz}(bv^{zx}Q_x +bv^{zy}Q_y + bv^{zz}Q_z) \\
- -n_{yx}(bv^{xx}Q_x +bv^{xy}Q_y + bv^{xz}Q_z) + (1-n_{yy})(bv^{yx}Q_x +bv^{yy}Q_y + bv^{yz}Q_z) - n_{yz}(bv^{zx}Q_x +bv^{zy}Q_y + bv^{zz}Q_z) \\
- -n_{zx}(bv^{xx}Q_x +bv^{xy}Q_y + bv^{xz}Q_z) - n_{zy}(bv^{yx}Q_x +bv^{yy}Q_y + bv^{yz}Q_z) + (1-n_{zz})(bv^{zx}Q_x +bv^{zy}Q_y + bv^{zz}Q_z)
+ (1-n_{xx})(M^{xx}Q_x +M^{xy}Q_y + M^{xz}Q_z) - n_{xy}(M^{yx}Q_x +M^{yy}Q_y + M^{yz}Q_z) - n_{xz}(M^{zx}Q_x +M^{zy}Q_y + M^{zz}Q_z) \\
+ -n_{yx}(M^{xx}Q_x +M^{xy}Q_y + M^{xz}Q_z) + (1-n_{yy})(M^{yx}Q_x +M^{yy}Q_y + M^{yz}Q_z) - n_{yz}(M^{zx}Q_x +M^{zy}Q_y + M^{zz}Q_z) \\
+ -n_{zx}(M^{xx}Q_x +M^{xy}Q_y + M^{xz}Q_z) - n_{zy}(M^{yx}Q_x +M^{yy}Q_y + M^{yz}Q_z) + (1-n_{zz})(M^{zx}Q_x +M^{zy}Q_y + M^{zz}Q_z)
  \end{array} \right) \\
    \mathbf{N}_v &=&
 \left(\begin{array}{c}
- (1-n_{xx})(vb^{xx}Q_x +vb^{xy}Q_y + vb^{xz}Q_z) - n_{xy}(vb^{yx}Q_x +vb^{yy}Q_y + vb^{yz}Q_z) - n_{xz}(vb^{zx}Q_x +vb^{zy}Q_y + vb^{zz}Q_z) \\
- -n_{yx}(vb^{xx}Q_x +vb^{xy}Q_y + vb^{xz}Q_z) + (1-n_{yy})(vb^{yx}Q_x +vb^{yy}Q_y + vb^{yz}Q_z) - n_{yz}(vb^{zx}Q_x +vb^{zy}Q_y + vb^{zz}Q_z) \\
- -n_{zx}(vb^{xx}Q_x +vb^{xy}Q_y + vb^{xz}Q_z) - n_{zy}(vb^{yx}Q_x +vb^{yy}Q_y + b^{yz}Q_z) + (1-n_{zz})(vb^{zx}Q_x +vb^{zy}Q_y + vb^{zz}Q_z)
+ (1-n_{xx})(W^{xx}Q_x +W^{xy}Q_y + W^{xz}Q_z) - n_{xy}(W^{yx}Q_x +W^{yy}Q_y + W^{yz}Q_z) - n_{xz}(W^{zx}Q_x +W^{zy}Q_y + W^{zz}Q_z) \\
+ -n_{yx}(W^{xx}Q_x +W^{xy}Q_y + W^{xz}Q_z) + (1-n_{yy})(W^{yx}Q_x +W^{yy}Q_y + W^{yz}Q_z) - n_{yz}(W^{zx}Q_x +W^{zy}Q_y + W^{zz}Q_z) \\
+ -n_{zx}(W^{xx}Q_x +W^{xy}Q_y + W^{xz}Q_z) - n_{zy}(W^{yx}Q_x +W^{yy}Q_y + b^{yz}Q_z) + (1-n_{zz})(W^{zx}Q_x +W^{zy}Q_y + W^{zz}Q_z)
  \end{array} \right)
 \end{eqnarray}
 
@@ -139,6 +139,15 @@ Q_\alpha& 0 & 0 & 2n_yn_x(\omega+1)-\nu^\prime_\mathrm{k}Q^2 & -2n_xn_x\omega+2\
 \end{equation}
 %
 and $Q_\alpha\equiv\mathbf{Q}\cdot\boldsymbol{\alpha}.$
+
+\begin{eqnarray}
+\mathrm{D}_\tau b_x &=&   -\nu^\prime_\mathrm{m}Q^2 b_x -Q_\alpha v_x + (1-n_{xx})(M^{xx}Q_x +M^{xy}Q_y + M^{xz}Q_z) - n_{xy}(M^{yx}Q_x +M^{yy}Q_y + M^{yz}Q_z) - n_{xz}(M^{zx}Q_x +M^{zy}Q_y + M^{zz}Q_z)\\
+\mathrm{D}_\tau	b_y &=& b_x - Q_\alpha v_y -\nu^\prime_\mathrm{m}Q^2 b_y -n_{yx}(M^{xx}Q_x +M^{xy}Q_y + M^{xz}Q_z) + (1-n_{yy})(M^{yx}Q_x +M^{yy}Q_y + M^{yz}Q_z) - n_{yz}(M^{zx}Q_x +M^{zy}Q_y + M^{zz}Q_z) \\
+\mathrm{D}_\tau	b_z &=& -\nu^\prime_\mathrm{m}Q^2 b_z -Q_\alpha v_z - n_{zx}(M^{xx}Q_x +M^{xy}Q_y + M^{xz}Q_z) - n_{zy}(M^{yx}Q_x +M^{yy}Q_y + M^{yz}Q_z) + (1-n_{zz})(M^{zx}Q_x +M^{zy}Q_y + M^{zz}Q_z) \\
+\mathrm{D}_\tau v_x &=&  Q_\alpha b_x + 2n_yn_x(\omega+1)v_x-\nu^\prime_\mathrm{k}Q^2v_x  -2\omega(n_xn_x-1)v_y +  (1-n_{xx})(W^{xx}Q_x +W^{xy}Q_y + W^{xz}Q_z) - n_{xy}(W^{yx}Q_x +W^{yy}Q_y + W^{yz}Q_z) - n_{xz}(W^{zx}Q_x +W^{zy}Q_y + W^{zz}Q_z) \\
+\mathrm{D}_\tau	v_y &=&  Q_\alpha b_y + 2n_yn_y(\omega+1)v_x -(2\omega+1)v_x - 2n_xn_y\omega v_y -\nu^\prime_\mathrm{k}Q^2 v_y - n_{yx}(W^{xx}Q_x +W^{xy}Q_y + W^{xz}Q_z) + (1-n_{yy})(W^{yx}Q_x +W^{yy}Q_y + W^{yz}Q_z) - n_{yz}(W^{zx}Q_x +W^{zy}Q_y + W^{zz}Q_z) \\
+\mathrm{D}_\tau v_z &=&  Q_\alpha b_z + 2n_yn_z(\omega+1)v_x -2n_xn_z \omega v_y   -\nu^\prime_\mathrm{k}Q^2 v_z  -n_{zx}(W^{xx}Q_x +W^{xy}Q_y + W^{xz}Q_z) - n_{zy}(W^{yx}Q_x +W^{yy}Q_y + b^{yz}Q_z) + (1-n_{zz})(W^{zx}Q_x +W^{zy}Q_y + W^{zz}Q_z)
+\end{eqnarray}
 
 
 \end{document}
