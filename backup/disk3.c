@@ -63,12 +63,13 @@ int main(void)
 				Ei[iz] = vx[iz]*vx[iz] + vy[iz]*vy[iz]  + bx[iz]*bx[iz] + by[iz]*by[iz];
 			}
 
-		Tempi=25.0; Nt=10000; dt=Tempi/Nt;
+		Tempi=25.0; Nt=20; dt=Tempi/Nt;
 //	 Tempi=25.0; Nt=100; dt=Tempi/Nt;
 
         // nachalo na integrirane po vreme; tuk se vyrti
 		for(it=1;it<=Nt; it++)
 		{t=it*dt;
+
 
 ////////////////////////////////////////////////////////////////////
 
