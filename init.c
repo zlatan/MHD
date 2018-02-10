@@ -53,28 +53,27 @@ void set_initial_values_linear_term(LinearTerm *lt,  double DQx,double DQy,doubl
      }
 }
 
-void set_DV(double DVQ)
+void set_DV(double *DV, double DVQ, double DQx,double DQy,double DQz)
 {
       for (int ix=0;ix<=2*Nx; ix++)
 	  {
-	  double Qx=-Qx0+ix*DQx;
+	  double Qx = -Qx0+ix*DQx;
 	for (int iy=0;iy<=2*Ny; iy++)
-	    {
-	     double Qy=-Qy0+iy*DQy;
+	     {
+	     double Qy = -Qy0+iy*DQy;
 	    for (int iz=0;iz<=2*Nz; iz++)
-     		{
-		 double Qz=-Qz0+iz*DQz;
-	         DV[ix][iy][iz]=DVQ;
+		{
+		 double Qz = -Qz0+iz*DQz;
+	         //*DV[ix][iy][iz] = DVQ;
 		}
-	    }
+	     }
 	  }
 
 }
 
 
-void set_initial_values_linear_term_gauss(LinearTerm *lt,double DQx,double DQy,double DQz,double DVQ)
+void set_initial_values_linear_term_gauss(LinearTerm *lt, double DQx, double DQy, double DQz, double DVQ)
 {
-  printf("Nx=%g\n",Nx);
     for(int ix=0;ix<=2*Nx; ix++)
 	{
 	double Qx=-Qx0+ix*DQx;

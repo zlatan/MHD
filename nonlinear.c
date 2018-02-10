@@ -22,7 +22,7 @@ void calculate_nonlinear_term(NonlinearTerm *bb, NonlinearTerm *vv, NonlinearTer
                                          if(ky<0) continue;
                                          if(ky>2*Ny) continue;
 					 for (int jz=0;jz<=2*Nz; jz++)
-					 {int kz=iz-jz+Nz; if(kz<0) continue; if(kz>2*Nz) continue;
+					 {int kz=iz-jz+Nz; if(kz<0) continue; if(kz>2*Nz) continue;					   
 						//bb
 						bb->xx[ix][iy][iz]+=b->x[jx][jy][jz]*b->x[kx][ky][kz]*DV[jx][jy][jz];
 						bb->xy[ix][iy][iz]+=b->x[jx][jy][jz]*b->y[kx][ky][kz]*DV[jx][jy][jz];

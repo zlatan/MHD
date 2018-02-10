@@ -42,18 +42,22 @@ int main(void)
 	Tempi=10.; Nt=2; dt=Tempi/Nt;
         // nachalo na integrirane po vreme; tuk se vyrti
         
-	double DV[2*Nx][2*Nx][2*Nx]=get_DV(DVQ);
-		
+	double DV[2*Nx][2*Nx][2*Nx];
+
+	set_DV(&DV,DQx,DQy,DQz);
+
+
+	
 	/*
 	for(i=0;i<=2*Nx;i++)
 	  for(j=0;j<=2*Ny;j++)
 	    printf( "%i %i %g\n",i,j,lv.x[i][j][0]);
-	  */
+	*/
 	
 		for(it=1;it<=Nt; it++)
 		   {t=it*dt;
-
-		         
+		  calculate_nonlinear_term(&bb, &vv, &bv,  &vb,  &b,  &v,  DQx, DQy, DQz, DVQ, DV);
+		     
 		         
 		 // krai na nelinejnata sila
 
