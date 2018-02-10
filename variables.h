@@ -15,9 +15,9 @@ typedef struct NonlinearTerm
 
 typedef struct LinearTerm
 {
-      double x[Nx][Ny][Nz];
-      double y[Nx][Ny][Nz];
-      double z[Nx][Ny][Nz];
+      double x[2*Nx+2][2*Ny+2][2*Nz+2];
+      double y[2*Nx+2][2*Ny+2][2*Nz+2];
+      double z[2*Nx+2][2*Ny+2][2*Nz+2];
 } LinearTerm;
 
 

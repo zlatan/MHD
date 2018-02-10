@@ -6,18 +6,22 @@
 
 int main(void)
 {
-	double DQx=Qx0/Nx, DQy=Qy0/Ny, DQz=Qz0/Nz;
+	int i=0;
+	int j=0;
+	int k=0;
+	
+        double DQx=Qx0/Nx, DQy=Qy0/Ny, DQz=Qz0/Nz;
 	double DVQ=DQx*DQy*DQz/((2*M_PI)*(2*M_PI)*(2*M_PI));
 
-	NonlinearTerm nv;
 	NonlinearTerm bb,vv,vb,bv;
-	LinearTerm lv;
 	LinearTerm v,b,fv,fb;
-	set_initial_values_nonlinear_term(&nv);
-        printf( "N->value=%g\n", nv.xx[1][1][1]);
-	set_initial_values_linear_term(&lv,DQx,DQy,DQz,DVQ);
-        printf( "L->value=%g\n", lv.x[2][2][2]);
+	
+	set_initial_values_linear_term(&v,DQx,DQy,DQz,DVQ);
+	set_initial_values_linear_term(&b,DQx,DQy,DQz,DVQ);
 
+	double Ei[2*Nx+2][2*Ny+2][2*Nz+2];
+	double Ef[2*Nx+2][2*Ny+2][2*Nz+2];
+	
 	double Tempi,Nt,dt,t;
 	int it;
 
@@ -32,85 +36,25 @@ int main(void)
 	betax = sin(alpha);
 	betaz = cos(alpha);
 
-	double DV[2*Nx+2][2*Nx+2][2*Nx+2];
 	int Lx=2*Nx, Ly= 2*Ny, Lz=2*Nz;
         double Q=0.0;
 
-		Tempi=10.; Nt=2; dt=Tempi/Nt;
+	Tempi=10.; Nt=2; dt=Tempi/Nt;
         // nachalo na integrirane po vreme; tuk se vyrti
+        
+	double DV[2*Nx][2*Nx][2*Nx]=get_DV(DVQ);
+		
+	/*
+	for(i=0;i<=2*Nx;i++)
+	  for(j=0;j<=2*Ny;j++)
+	    printf( "%i %i %g\n",i,j,lv.x[i][j][0]);
+	  */
+	
 		for(it=1;it<=Nt; it++)
 		   {t=it*dt;
-		   for(int ix=0;ix<=Lx; ix++)
-		       {double Qx=-Qx0+ix*DQx;
-		       for(int iy=0;iy<=Ly; iy++)
-			   {double Qy=-Qy0+iy*DQy;
-			   for(int iz=0;iz<=Lz; iz++)
-			       {double Qz=-Qz0+iz*DQz;
-			       // summation cycles for nonlinear terms
-			       for (int jx=0;jx<=Lx; jx++)
-				   {int kx=ix-jx+Nx; 
-				    if(kx<0) continue;
-                                    if(kx>Lx) continue;
-				    for (int jy=0;jy<=Ly; jy++)
-					{int ky=iy-jy+Ny; 
-                                         if(ky<0) continue;
-                                         if(ky>Ly) continue;
-					 for (int jz=0;jz<=Lz; jz++)
-					 {int kz=iz-jz+Nz; if(kz<0) continue; if(kz>Lz) continue;
-						//bb
-						bb.xx[ix][iy][iz]+=b.x[jx][jy][jz]*b.x[kx][ky][kz]*DV[jx][jy][jz];
-						bb.xy[ix][iy][iz]+=b.x[jx][jy][jz]*b.y[kx][ky][kz]*DV[jx][jy][jz];
- 						bb.xz[ix][iy][iz]+=b.x[jx][jy][jz]*b.z[kx][ky][kz]*DV[jx][jy][jz];
 
-						bb.yx[ix][iy][iz]+=b.y[jx][jy][jz]*b.x[kx][ky][kz]*DV[jx][jy][jz];
-						bb.yy[ix][iy][iz]+=b.y[jx][jy][jz]*b.y[kx][ky][kz]*DV[jx][jy][jz];
-						bb.yz[ix][iy][iz]+=b.y[jx][jy][jz]*b.z[kx][ky][kz]*DV[jx][jy][jz];
-
-						bb.zx[ix][iy][iz]+=b.z[jx][jy][jz]*b.x[kx][ky][kz]*DV[jx][jy][jz];
-						bb.zy[ix][iy][iz]+=b.z[jx][jy][jz]*b.y[kx][ky][kz]*DV[jx][jy][jz];
- 						bb.zz[ix][iy][iz]+=b.z[jx][jy][jz]*b.z[kx][ky][kz]*DV[jx][jy][jz];
-						//vv
-						vv.xx[ix][iy][iz]+=v.x[jx][jy][jz]*v.x[kx][ky][kz]*DV[jx][jy][jz];
-						vv.xy[ix][iy][iz]+=v.x[jx][jy][jz]*v.y[kx][ky][kz]*DV[jx][jy][jz];
-		 				vv.xz[ix][iy][iz]+=v.x[jx][jy][jz]*v.z[kx][ky][kz]*DV[jx][jy][jz];
-
-						vv.yx[ix][iy][iz]+=v.y[jx][jy][jz]*v.x[kx][ky][kz]*DV[jx][jy][jz];
- 						vv.yy[ix][iy][iz]+=v.y[jx][jy][jz]*v.y[kx][ky][kz]*DV[jx][jy][jz]; 
-						vv.yz[ix][iy][iz]+=v.y[jx][jy][jz]*v.z[kx][ky][kz]*DV[jx][jy][jz];
-						
-						vv.zx[ix][iy][iz]+=v.z[jx][jy][jz]*v.x[kx][ky][kz]*DV[jx][jy][jz];
- 						vv.zy[ix][iy][iz]+=v.z[jx][jy][jz]*v.y[kx][ky][kz]*DV[jx][jy][jz];
-						vv.zz[ix][iy][iz]+=v.z[jx][jy][jz]*v.z[kx][ky][kz]*DV[jx][jy][jz];
-						//bv
-						bv.xx[ix][iy][iz]+=b.x[jx][jy][jz]*v.x[kx][ky][kz]*DV[jx][jy][jz];
-						bv.xy[ix][iy][iz]+=b.x[jx][jy][jz]*v.y[kx][ky][kz]*DV[jx][jy][jz];
-						bv.xz[ix][iy][iz]+=b.x[jx][jy][jz]*v.z[kx][ky][kz]*DV[jx][jy][jz];
-
-						bv.yx[ix][iy][iz]+=b.y[jx][jy][jz]*v.x[kx][ky][kz]*DV[jx][jy][jz];
-						bv.yy[ix][iy][iz]+=b.y[jx][jy][jz]*v.y[kx][ky][kz]*DV[jx][jy][jz];
-						bv.yz[ix][iy][iz]+=b.y[jx][jy][jz]*v.z[kx][ky][kz]*DV[jx][jy][jz];
-
-						bv.zx[ix][iy][iz]+=b.z[jx][jy][jz]*v.x[kx][ky][kz]*DV[jx][jy][jz];
-						bv.zy[ix][iy][iz]+=b.z[jx][jy][jz]*v.y[kx][ky][kz]*DV[jx][jy][jz];
-						bv.zz[ix][iy][iz]+=b.z[jx][jy][jz]*v.z[kx][ky][kz]*DV[jx][jy][jz];
-						//vb
-						vb.xx[ix][iy][iz]+=v.x[jx][jy][jz]*b.x[kx][ky][kz]*DV[jx][jy][jz];
-						vb.xy[ix][iy][iz]+=v.x[jx][jy][jz]*b.y[kx][ky][kz]*DV[jx][jy][jz];
-						vb.xz[ix][iy][iz]+=v.x[jx][jy][jz]*b.z[kx][ky][kz]*DV[jx][jy][jz];
-												
-						vb.yx[ix][iy][iz]+=v.y[jx][jy][jz]*b.x[kx][ky][kz]*DV[jx][jy][jz];
- 						vb.yy[ix][iy][iz]+=v.y[jx][jy][jz]*b.y[kx][ky][kz]*DV[jx][jy][jz];
-						vb.yz[ix][iy][iz]+=v.y[jx][jy][jz]*b.z[kx][ky][kz]*DV[jx][jy][jz];
-
-						vb.zx[ix][iy][iz]+=v.z[jx][jy][jz]*b.x[kx][ky][kz]*DV[jx][jy][jz];
-						vb.zy[ix][iy][iz]+=v.z[jx][jy][jz]*b.y[kx][ky][kz]*DV[jx][jy][jz];
-						vb.zz[ix][iy][iz]+=v.z[jx][jy][jz]*b.z[kx][ky][kz]*DV[jx][jy][jz];
-						}//kz
-					    }//ky
-				        }//kx
-			           }//iz
-			      }//iy
-		         }//ix
+		         
+		         
 		 // krai na nelinejnata sila
 
 			for(int ix=0;ix<=Lx; ix++)
@@ -119,9 +63,7 @@ int main(void)
 				{double Qy=-Qy0+iy*DQy;
 					for(int iz=0;iz<=Lz; iz++)
 					{double Qz=-Qz0+iz*DQz;
-
 					 double rnx, rny, rnz;
-
 					 double fvn,fbn,aaa,fnvx,fnvy,fnvz,fnbx,fnby,fnbz,flvx,flvy,flvz,flbx,flby,flbz;
 
 					 Q2=Qx*Qx+Qy*Qy+Qz*Qz;
@@ -161,10 +103,10 @@ int main(void)
 					 fnby-= fbn*rny;
 					 fnbz-= fbn*rnz;
 
-					 aaa = 2.0*(rny*v.x[ix][iy][iz] - omega*(rnx*v.y[ix][iy][iz]-rny*v.x[ix][iy][iz]));
+					 aaa  = 2.0*(rny*v.x[ix][iy][iz] - omega*(rnx*v.y[ix][iy][iz]-rny*v.x[ix][iy][iz]));
 					 flvx =                   aaa*rnx + 2.0*omega*v.y[ix][iy][iz] + Qbeta*b.x[ix][iy][iz] - rnuk*Q2*v.x[ix][iy][iz];
 					 flvy =-v.x[ix][iy][iz] + aaa*rny - 2.0*omega*v.x[ix][iy][iz] + Qbeta*b.y[ix][iy][iz] - rnuk*Q2*v.y[ix][iy][iz];
-					 flvz =                   aaa*rnz                            + Qbeta*b.z[ix][iy][iz] - rnuk*Q2*v.z[ix][iy][iz];
+					 flvz =                   aaa*rnz                             + Qbeta*b.z[ix][iy][iz] - rnuk*Q2*v.z[ix][iy][iz];
 
 					 flbx =      		 - Qbeta*v.x[ix][iy][iz] - rnum*Q2*v.x[ix][iy][iz];
 					 flby = b.x[ix][iy][iz]  - Qbeta*v.y[ix][iy][iz] - rnum*Q2*v.y[ix][iy][iz];
@@ -204,12 +146,37 @@ int main(void)
 					 b.y[ix][iy][iz]+=fb.y[ix][iy][iz]*dt;
 					 b.z[ix][iy][iz]+=fb.z[ix][iy][iz]*dt;
 
+					 	if (it == 1)
+						{
+							Ei[ix][iy][iz] = v.x[ix][iy][iz]*v.x[ix][iy][iz] + v.y[ix][iy][iz]*v.y[ix][iy][iz] + v.z[ix][iy][iz]*v.z[ix][iy][iz] + b.x[ix][iy][iz]*b.x[ix][iy][iz] + b.y[ix][iy][iz]*b.y[ix][iy][iz] + b.z[ix][iy][iz]*b.z[ix][iy][iz];
+						}
+
+						if (it == 2)
+						{
+							Ef[ix][iy][iz] = v.x[ix][iy][iz]*v.x[ix][iy][iz] + v.y[ix][iy][iz]*v.y[ix][iy][iz] + v.z[ix][iy][iz]*v.z[ix][iy][iz] + b.x[ix][iy][iz]*b.x[ix][iy][iz] + b.y[ix][iy][iz]*b.y[ix][iy][iz] + b.z[ix][iy][iz]*b.z[ix][iy][iz];
+						}
+
 					}//iz
 				}//iy
 			}//ix
 		}//it
 
-
-return 0;
+		for(int ix=0;ix<=Lx; ix++)
+					{double Qx=-Qx0+ix*DQx;
+					// 	for(int iy=0;iy<=Ly; iy++)
+					// 	{double Qy=-Qy0+iy*DQy;
+							for(int iz=0;iz<=Lz; iz++)
+							{double Qz=-Qz0+iz*DQz;
+								// if ( ((ix - Nx)*(ix - Nx) + (iy-Ny)*(iy-Ny) + (iz-Nz)*(iz-Nz)) == 0 )
+								// {
+								// 	// printf("Zero");
+								// 	continue;
+								// }
+								printf("%g %g %g\n",Qx,Qz,pow( (1/(2.0*Tempi))*log(Ef[ix][Ny][iz]/Ei[ix][Ny][iz]),2));
+ 
+							}//iz
+					// 	}//iy
+					}//ix
+    return 0;
 }
 
