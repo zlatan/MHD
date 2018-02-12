@@ -124,7 +124,8 @@ int main(void)
 			 rnvx[ix][iy][iz]-=rnx*vn; rnvy[ix][iy][iz]-=rny*vn; rnvz[ix][iy][iz]-=rnz*vn;
 			 // magnetic projection
 			 rnbx[ix][iy][iz]-=rnx*bn; rnby[ix][iy][iz]-=rny*bn; rnbz[ix][iy][iz]-=rnz*bn;
-			 printf("%g %g %g %g\n",Qx, Qy, Qz, vvxx[ix][iy][iz]);
+			 // printf("%g %g %g %g\n",Qx, Qy, Qz, vvxx[ix][iy][iz]);
+			printf("%g %g %g\n",Qy, Qz, vvxx[ix][iy][iz]);
 			}
 		}
 	}

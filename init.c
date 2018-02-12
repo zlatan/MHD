@@ -21,6 +21,25 @@ void set_initial_values_nonlinear_term(NonlinearTerm *nt)
 	    }
 }
 
+void set_initial_values_nonlinear_term_zero(NonlinearTerm *nt)
+{
+    for (int ix=0;ix<=2*Nx; ix++)
+	for (int iy=0;iy<=2*Ny; iy++)
+	    for (int iz=0;iz<=2*Nz; iz++)
+	    {
+	      nt->xx[ix][iy][iz]=0.0;
+	      nt->xy[ix][iy][iz]=0.0;
+	      nt->xz[ix][iy][iz]=0.0;
+	      nt->yx[ix][iy][iz]=0.0;
+	      nt->yy[ix][iy][iz]=0.0;
+	      nt->yz[ix][iy][iz]=0.0;
+      	      nt->zx[ix][iy][iz]=0.0;
+      	      nt->zy[ix][iy][iz]=0.0;
+      	      nt->zz[ix][iy][iz]=0.0;
+	    }
+}
+
+
 void set_initial_values_linear_term(LinearTerm *lt,  double DQx,double DQy,double DQz,double DVQ)
 {
     for (int ix=0;ix<=2*Nx; ix++)
@@ -86,7 +105,7 @@ void set_initial_values_linear_term_gauss(LinearTerm *lt, double DQx, double DQy
 		 double Q2;
                       Q2=Qx*Qx + Qy*Qy + Qz*Qz;
 		      lt->x[ix][iy][iz]=exp(-Q2);
-		      lt->y[ix][iy][iz]=1.0;
+		      lt->y[ix][iy][iz]=0.0;
 		      lt->z[ix][iy][iz]=0.0;
 
 	}

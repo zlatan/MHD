@@ -1,11 +1,14 @@
 #include "parameters.h"
 #include "variables.h"
+#include "nonlinear.h"
 #include <stdlib.h>
 #include <math.h>
 
 
-void calculate_nonlinear_term(NonlinearTerm *bb, NonlinearTerm *vv, NonlinearTerm *bv, NonlinearTerm *vb,LinearTerm *b, LinearTerm *v, double DQx,double DQy,double DQz,double DVQ, double DV[2*Nx][2*Nx][2*Nx])
+void calculate_nonlinear_term(NonlinearTerm *bb, NonlinearTerm *vv, NonlinearTerm *bv, NonlinearTerm *vb,LinearTerm *b, LinearTerm *v, double DQx,double DQy,double DQz,double DVQ)
 {
+double DV[2*Nx+2][2*Ny+2][2*Nz+2];
+
 		   for(int ix=0;ix<=2*Nx; ix++)
 		       {double Qx=-Qx0+ix*DQx;
 		       for(int iy=0;iy<=2*Ny; iy++)
@@ -23,6 +26,9 @@ void calculate_nonlinear_term(NonlinearTerm *bb, NonlinearTerm *vv, NonlinearTer
                                          if(ky>2*Ny) continue;
 					 for (int jz=0;jz<=2*Nz; jz++)
 					 {int kz=iz-jz+Nz; if(kz<0) continue; if(kz>2*Nz) continue;					   
+					
+					  DV[ix][iy][iz] = DVQ;
+
 						//bb
 						bb->xx[ix][iy][iz]+=b->x[jx][jy][jz]*b->x[kx][ky][kz]*DV[jx][jy][jz];
 						bb->xy[ix][iy][iz]+=b->x[jx][jy][jz]*b->y[kx][ky][kz]*DV[jx][jy][jz];
