@@ -62,32 +62,18 @@ void set_initial_values_linear_term(LinearTerm *lt,  double DQx,double DQy,doubl
 		if ( ((ix - Nx)*(ix - Nx) + (iy-Ny)*(iy-Ny) + (iz-Nz)*(iz-Nz)) == 0 )
 			continue;
 
-		rnx=Qx/Q; rny=Qy/Q; rnz=Qz/Q;
+		rnx=Qx/Q;
+ 		rny=Qy/Q;
+		rnz=Qz/Q;
+
                 n = lt->x[ix][iy][iz]*rnx + lt->y[ix][iy][iz]*rny + lt->z[ix][iy][iz]*rnz;
+
 		lt->x[ix][iy][iz]-= n*rnx;
 		lt->y[ix][iy][iz]-= n*rny;
 		lt->z[ix][iy][iz]-= n*rnz;
 	    }
 	}
      }
-}
-
-void set_DV(double *DV, double DVQ, double DQx,double DQy,double DQz)
-{
-      for (int ix=0;ix<=2*Nx; ix++)
-	  {
-	  double Qx = -Qx0+ix*DQx;
-	for (int iy=0;iy<=2*Ny; iy++)
-	     {
-	     double Qy = -Qy0+iy*DQy;
-	    for (int iz=0;iz<=2*Nz; iz++)
-		{
-		 double Qz = -Qz0+iz*DQz;
-	         //*DV[ix][iy][iz] = DVQ;
-		}
-	     }
-	  }
-
 }
 
 

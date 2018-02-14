@@ -1,6 +1,5 @@
 #include "parameters.h"
 #include "variables.h"
-#include "nonlinear.h"
 #include <stdlib.h>
 #include <math.h>
 
