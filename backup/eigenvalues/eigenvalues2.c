@@ -36,8 +36,8 @@ int main (void)
 	tmp[i] = GSL_REAL(labdasq);
         gsl_vector_complex_view evec_i = gsl_matrix_complex_column (evec, i);
 	
-        vx[i]=GSL_REAL(gsl_vector_complex_get(&evec_i.vector, 0));
-        vy[i]=GSL_REAL(gsl_vector_complex_get(&evec_i.vector, 2));
+        vx[i]=GSL_REAL(gsl_vector_complex_get(&evec_i.vector, 2));
+        vy[i]=GSL_REAL(gsl_vector_complex_get(&evec_i.vector, 3));
 
         //printf ("value -> %g\n", eval_i*eval_i);
 

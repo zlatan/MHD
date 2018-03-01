@@ -19,8 +19,8 @@ int main (void)
                     1.0, 0.0, 0.0, 0.0, -Qa, 0.0,
                     0.0, 0.0, 0.0, 0.0, 0.0, -Qa,
                     Qa , 0.0, 0.0, 2*ny*nx*(w+1)        , -2*nx*nx*w+2*w , 0,
-		                0.0, Qa , 0.0, 2*ny*ny*(w+1)-(2*w+1), -2*nx*ny*w     , 0,
-		                0.0, 0.0, Qa , 2*ny*nz*(w+1)        , -2*nx*nz*w	   , 0 };
+		    0.0, Qa , 0.0, 2*ny*ny*(w+1)-(2*w+1), -2*nx*ny*w     , 0,
+		    0.0, 0.0, Qa , 2*ny*nz*(w+1)        , -2*nx*nz*w	 , 0 };
 
   gsl_matrix_view m = gsl_matrix_view_array (data, 6, 6);
   gsl_vector_complex *eval = gsl_vector_complex_alloc (6);

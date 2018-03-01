@@ -5,7 +5,7 @@
 int main(void)
 {
 
-	double Qx0=2., Qy0=2., Qz0=2.;
+	double Qx0=2.0, Qy0=5.0, Qz0=1.3;
 	int Nx=10, Ny=10, Nz=10;
 	int NDimx=2*Nx+4, NDimy=2*Ny+4, NDimz=2*Nz+4;
 	double vx[NDimx][NDimy][NDimz], vy[NDimx][NDimy][NDimz], vz[NDimx][NDimy][NDimz],
@@ -34,8 +34,7 @@ int main(void)
 	double Ef[NDimx][NDimy][NDimz];
 
 
-    double Q=0.0;
-// Inicializacija
+        double Q=0.0;
 	for (int ix=0;ix<=Lx; ix++)
 	{double Qx=-Qx0+ix*DQx;
 		for (int iy=0;iy<=Ly; iy++)
@@ -103,7 +102,7 @@ int main(void)
 					 }
 					 Q=sqrt(Q2);
 					//  printf("Q=%g it=>%i",Q,it);
-					 nx=Qx/Q;
+					 nx=0.0;
 					 ny=Qy/Q;
 					 nz=Qz/Q;
 					 Qalpha=Qy*sin(alpha)+Qz*cos(alpha); // betay=0.
@@ -155,11 +154,16 @@ int main(void)
 		}//it
 
 
+
+				for(int iy=0;iy<=Ly; iy++)
+				{double Qy=-Qy0+iy*DQy;
 							for(int iz=0;iz<=Lz; iz++)
-							{double Qz=-Qz0+iz*DQz;
-								printf("%g %g\n",Qz,pow( (1/(2.0*Tempi))*log(Ef[0][0][iz]/Ei[0][0][iz]),2));
+							{
+							  double Qz=-Qz0+iz*DQz;
+								printf("%g %g %g\n",Qy,Qz,pow( (1/(2.0*Tempi))*log(Ef[0][iy][iz]/Ei[0][iy][iz]),2));
  
 							}
+						}
 
 
 
