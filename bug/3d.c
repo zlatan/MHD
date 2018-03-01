@@ -15,10 +15,8 @@ int main(void)
 	double DQx=Qx0/Nx, DQy=Qy0/Ny, DQz=Qz0/Nz, nx, ny, nz, vn, bn;
 	double DVQ=DQx*DQy*DQz/((2*M_PI)*(2*M_PI)*(2*M_PI));
 	double alpha=0.0;
-	double betax,betaz;
-	double betay=0.0;
 	double omega=-2./3.;
-	double Q2,Qbeta;
+	double Q2,Qalpha;
 
 	double fvx[NDimx][NDimy][NDimz];
 	double fvy[NDimx][NDimy][NDimz];
@@ -35,8 +33,6 @@ int main(void)
   double Ei[NDimx][NDimy][NDimz];
 	double Ef[NDimx][NDimy][NDimz];
 
-	betax = sin(alpha);
-	betaz = cos(alpha);
 
     double Q=0.0;
 // Inicializacija
@@ -107,20 +103,22 @@ int main(void)
 					 }
 					 Q=sqrt(Q2);
 					//  printf("Q=%g it=>%i",Q,it);
-					 nx=Qx/Q; ny=0.0; nz=Qz/Q;
-					 Qbeta=Qx*betax+Qz*betaz; // betay=0.
+					 nx=Qx/Q;
+					 ny=Qy/Q;
+					 nz=Qz/Q;
+					 Qalpha=Qy*sin(alpha)+Qz*cos(alpha); // betay=0.
 
 					//  printf("fvn=%g it=>%i",fvn,it);
 					//  printf("fnvx=%g fnvy=%g fnvz=%g iteration=>%i\n",fnvx,fnvy,fnvz,it);
 
 					 aaa =       2.0*(ny*vx[ix][iy][iz] - omega*(nx*vy[ix][iy][iz]-ny*vx[ix][iy][iz]));
-					 flvx =                  aaa*nx + 2.0*omega*vy[ix][iy][iz] + Qbeta*bx[ix][iy][iz] - rnuk*Q2*vx[ix][iy][iz];
-					 flvy =-vx[ix][iy][iz] + aaa*ny - 2.0*omega*vx[ix][iy][iz] + Qbeta*by[ix][iy][iz] - rnuk*Q2*vy[ix][iy][iz];
-					 flvz =                  aaa*nz                            + Qbeta*bz[ix][iy][iz] - rnuk*Q2*vz[ix][iy][iz];
+					 flvx =                  aaa*nx + 2.0*omega*vy[ix][iy][iz] + Qalpha*bx[ix][iy][iz] - rnuk*Q2*vx[ix][iy][iz];
+					 flvy =-vx[ix][iy][iz] + aaa*ny - 2.0*omega*vx[ix][iy][iz] + Qalpha*by[ix][iy][iz] - rnuk*Q2*vy[ix][iy][iz];
+					 flvz =                  aaa*nz                            + Qalpha*bz[ix][iy][iz] - rnuk*Q2*vz[ix][iy][iz];
 
-					 flbx =    		- Qbeta*vx[ix][iy][iz] - rnum*Q2*vx[ix][iy][iz];
-					 flby = bx[ix][iy][iz]  - Qbeta*vy[ix][iy][iz] - rnum*Q2*vy[ix][iy][iz];
-					 flbz =    		- Qbeta*vz[ix][iy][iz] - rnum*Q2*vz[ix][iy][iz];
+					 flbx =    		- Qalpha*vx[ix][iy][iz] - rnum*Q2*vx[ix][iy][iz];
+					 flby = bx[ix][iy][iz]  - Qalpha*vy[ix][iy][iz] - rnum*Q2*vy[ix][iy][iz];
+					 flbz =    		- Qalpha*vz[ix][iy][iz] - rnum*Q2*vz[ix][iy][iz];
 
 
 
