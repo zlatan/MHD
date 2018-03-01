@@ -12,7 +12,7 @@ int main(void)
 	bx[NDimx][NDimy][NDimz], by[NDimx][NDimy][NDimz], bz[NDimx][NDimy][NDimz],
 	DV[NDimx][NDimy][NDimz];
 	int Lx=2*Nx, Ly= 2*Ny, Lz=2*Nz;
-	double DQx=Qx0/Nx, DQy=Qy0/Ny, DQz=Qz0/Nz, rnx, rny, rnz, vn, bn;
+	double DQx=Qx0/Nx, DQy=Qy0/Ny, DQz=Qz0/Nz, nx, ny, nz, vn, bn;
 	double DVQ=DQx*DQy*DQz/((2*M_PI)*(2*M_PI)*(2*M_PI));
 	double alpha=0.0;
 	double betax,betaz;
@@ -65,18 +65,18 @@ int main(void)
 				{
 					continue;
 				}
-				rnx=Qx/Q; rny=Qy/Q; rnz=Qz/Q;
+				nx=Qx/Q; ny=Qy/Q; nz=Qz/Q;
 
-				vn = vx[ix][iy][iz]*rnx + vy[ix][iy][iz]*rny + vz[ix][iy][iz]*rnz;
-				bn = bx[ix][iy][iz]*rnx + by[ix][iy][iz]*rny + bz[ix][iy][iz]*rnz;
+				vn = vx[ix][iy][iz]*nx + vy[ix][iy][iz]*ny + vz[ix][iy][iz]*nz;
+				bn = bx[ix][iy][iz]*nx + by[ix][iy][iz]*ny + bz[ix][iy][iz]*nz;
 				
-				vx[ix][iy][iz]-= vn*rnx;
-				vy[ix][iy][iz]-= vn*rny;
-				vz[ix][iy][iz]-= vn*rnz;
+				vx[ix][iy][iz]-= vn*nx;
+				vy[ix][iy][iz]-= vn*ny;
+				vz[ix][iy][iz]-= vn*nz;
 
-				bx[ix][iy][iz]-= bn*rnx;
-				by[ix][iy][iz]-= bn*rny;
-				bz[ix][iy][iz]-= bn*rnz;
+				bx[ix][iy][iz]-= bn*nx;
+				by[ix][iy][iz]-= bn*ny;
+				bz[ix][iy][iz]-= bn*nz;
 
 
 				Ei[ix][iy][iz] = vx[ix][iy][iz]*vx[ix][iy][iz] + vy[ix][iy][iz]*vy[ix][iy][iz] + vz[ix][iy][iz]*vz[ix][iy][iz] + bx[ix][iy][iz]*bx[ix][iy][iz] + by[ix][iy][iz]*by[ix][iy][iz] + bz[ix][iy][iz]*bz[ix][iy][iz];
@@ -107,17 +107,16 @@ int main(void)
 					 }
 					 Q=sqrt(Q2);
 					//  printf("Q=%g it=>%i",Q,it);
-					 rnx=Qx/Q; rny=Qy/Q; rnz=Qz/Q;
+					 nx=Qx/Q; ny=0.0; nz=Qz/Q;
 					 Qbeta=Qx*betax+Qz*betaz; // betay=0.
 
 					//  printf("fvn=%g it=>%i",fvn,it);
 					//  printf("fnvx=%g fnvy=%g fnvz=%g iteration=>%i\n",fnvx,fnvy,fnvz,it);
 
-					 aaa =       2.0*(rny*vx[ix][iy][iz] - omega*(rnx*vy[ix][iy][iz]-rny*vx[ix][iy][iz]));
-					 aaa = 0.0;
-					 flvx =                  aaa*rnx + 2.0*omega*vy[ix][iy][iz] + Qbeta*bx[ix][iy][iz] - rnuk*Q2*vx[ix][iy][iz];
-					 flvy =-vx[ix][iy][iz] + aaa*rny - 2.0*omega*vx[ix][iy][iz] + Qbeta*by[ix][iy][iz] - rnuk*Q2*vy[ix][iy][iz];
-					 flvz =                  aaa*rnz                            + Qbeta*bz[ix][iy][iz] - rnuk*Q2*vz[ix][iy][iz];
+					 aaa =       2.0*(ny*vx[ix][iy][iz] - omega*(nx*vy[ix][iy][iz]-ny*vx[ix][iy][iz]));
+					 flvx =                  aaa*nx + 2.0*omega*vy[ix][iy][iz] + Qbeta*bx[ix][iy][iz] - rnuk*Q2*vx[ix][iy][iz];
+					 flvy =-vx[ix][iy][iz] + aaa*ny - 2.0*omega*vx[ix][iy][iz] + Qbeta*by[ix][iy][iz] - rnuk*Q2*vy[ix][iy][iz];
+					 flvz =                  aaa*nz                            + Qbeta*bz[ix][iy][iz] - rnuk*Q2*vz[ix][iy][iz];
 
 					 flbx =    		- Qbeta*vx[ix][iy][iz] - rnum*Q2*vx[ix][iy][iz];
 					 flby = bx[ix][iy][iz]  - Qbeta*vy[ix][iy][iz] - rnum*Q2*vy[ix][iy][iz];
