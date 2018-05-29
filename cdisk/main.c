@@ -3,13 +3,54 @@
 
 const double alpha = 0.0;
 const double omega = -2. / 3.;
-const double rnuk = 0.0;
-const double rnum = 0.0;
+const double rnuk = 0.02;
+const double rnum = 0.02;
+
+#define D 10
+
+typedef struct Function
+{
+    double argument[D+1];
+    double value[D+1];
+} Function;
+
+
+
+double aitken(Function *f, int N, double point){
+// TODO: SORT
+    for(int k=0;k<N; k++)
+        for(int i=k+1;i<=N;i++)
+            f->value[i]=((f->argument[k]-point)*f->value[i] - (f->argument[i]-point)*f->value[k]) / ((f->argument[k]-point) - (f->argument[i]-point));
+    //  f[i]      =                   ( (x[k]-xx)*f[i] - (x[i]-xx)*f[k] )                    /              ( (x[k]-xx)- (x[i]-xx) );
+    return f->value[N];
+}
+
+double shift(double x[],double f[],double xx, int Ni, int N, double a, double b, double s){
+    Function function;
+    int i,j;
+    double dx;
+    double ff;
+    dx=(b-a)/N;
+    j=(int) ( (xx-a)/dx );
+
+    j-=2;
+    if (j<1)
+        j=1;
+
+    if (j+Ni > N) // Ni<N
+        j = N - Ni;
+
+    for(i=0;i<=Ni;i++){
+        function.argument[i]=x[i+j];
+        function.value[i]=f[i+j];
+    }
+
+    ff=aitken(&function,Ni,xx-s);
+    return ff;
+}
 
 
 int main() {
-
-
     double Qx0 = 2.0;
     double Qy0 = 2.0;
     double Qz0 = 2.0;
@@ -18,9 +59,11 @@ int main() {
     int Ny = 4;
     int Nz = 4;
 
-    double Tempi = 25.0;
-    int Nt = 1000;
-    double dt = Tempi / Nt;
+    int Nt = 10;
+    double dt = 0.025;
+    double Tempi = Nt*dt;
+
+    int Ni=4;
 
     int NDimx = 2 * Nx + 4, NDimy = 2 * Ny + 4, NDimz = 2 * Nz + 4;
 
@@ -59,7 +102,9 @@ int main() {
             vbzx[NDimx][NDimy][NDimz], vbzy[NDimx][NDimy][NDimz], vbzz[NDimx][NDimy][NDimz];
 
 
-    FILE *f = fopen("q_v.txt", "w");
+//    FILE *f = fopen("q_v.txt", "w");
+    FILE *ffb = fopen("q_b.txt", "w");
+    FILE *ffv = fopen("q_v.txt", "w");
 
     for (int ix = 0; ix <= Lx; ix++) {
         for (int iy = 0; iy <= Ly; iy++) {
@@ -97,56 +142,54 @@ int main() {
                 bx[ix][iy][iz] -= bn * nx;
                 by[ix][iy][iz] -= bn * ny;
                 bz[ix][iy][iz] -= bn * nz;
-
-                bbxx[ix][iy][iz] = 0.0;
-                bbxy[ix][iy][iz] = 0.0;
-                bbxz[ix][iy][iz] = 0.0;
-                bbyx[ix][iy][iz] = 0.0;
-                bbyy[ix][iy][iz] = 0.0;
-                bbyz[ix][iy][iz] = 0.0;
-                bbzx[ix][iy][iz] = 0.0;
-                bbzy[ix][iy][iz] = 0.0;
-                bbzz[ix][iy][iz] = 0.0;
-                //vv
-                vvxx[ix][iy][iz] = 0.0;
-                vvxy[ix][iy][iz] = 0.0;
-                vvxz[ix][iy][iz] = 0.0;
-                vvyx[ix][iy][iz] = 0.0;
-                vvyy[ix][iy][iz] = 0.0;
-                vvyz[ix][iy][iz] = 0.0;
-                vvzx[ix][iy][iz] = 0.0;
-                vvzy[ix][iy][iz] = 0.0;
-                vvzz[ix][iy][iz] = 0.0;
-                //bv
-                bvxx[ix][iy][iz] = 0.0;
-                bvxy[ix][iy][iz] = 0.0;
-                bvxz[ix][iy][iz] = 0.0;
-                bvyx[ix][iy][iz] = 0.0;
-                bvyy[ix][iy][iz] = 0.0;
-                bvyz[ix][iy][iz] = 0.0;
-                bvzx[ix][iy][iz] = 0.0;
-                bvzy[ix][iy][iz] = 0.0;
-                bvzz[ix][iy][iz] = 0.0;
-                //vb
-                vbxx[ix][iy][iz] = 0.0;
-                vbxy[ix][iy][iz] = 0.0;
-                vbxz[ix][iy][iz] = 0.0;
-                vbyx[ix][iy][iz] = 0.0;
-                vbyy[ix][iy][iz] = 0.0;
-                vbyz[ix][iy][iz] = 0.0;
-                vbzx[ix][iy][iz] = 0.0;
-                vbzy[ix][iy][iz] = 0.0;
-                vbzz[ix][iy][iz] = 0.0;
             }
         }
     }
 
 
     for (int it = 1; it <= Nt; it++) {
-        puts("debug");
         for (int ix = 0; ix <= Lx; ix++) {
             for (int iy = 0; iy <= Ly; iy++) {
                 for (int iz = 0; iz <= Lz; iz++) {
+                    bbxx[ix][iy][iz]  = 0.0;
+                    bbxy[ix][iy][iz]  = 0.0;
+                    bbxz[ix][iy][iz]  = 0.0;
+                    bbyx[ix][iy][iz]  = 0.0;
+                    bbyy[ix][iy][iz]  = 0.0;
+                    bbyz[ix][iy][iz]  = 0.0;
+                    bbzx[ix][iy][iz]  = 0.0;
+                    bbzy[ix][iy][iz]  = 0.0;
+                    bbzz[ix][iy][iz]  = 0.0;
+
+                    vvxx[ix][iy][iz]  = 0.0;
+                    vvxy[ix][iy][iz]  = 0.0;
+                    vvxz[ix][iy][iz]  = 0.0;
+                    vvyx[ix][iy][iz]  = 0.0;
+                    vvyy[ix][iy][iz]  = 0.0;
+                    vvyz[ix][iy][iz]  = 0.0;
+                    vvzx[ix][iy][iz]  = 0.0;
+                    vvzy[ix][iy][iz]  = 0.0;
+                    vvzz[ix][iy][iz]  = 0.0;
+
+                    bvxx[ix][iy][iz]  = 0.0;
+                    bvxy[ix][iy][iz]  = 0.0;
+                    bvxz[ix][iy][iz]  = 0.0;
+                    bvyx[ix][iy][iz]  = 0.0;
+                    bvyy[ix][iy][iz]  = 0.0;
+                    bvyz[ix][iy][iz]  = 0.0;
+                    bvzx[ix][iy][iz]  = 0.0;
+                    bvzy[ix][iy][iz]  = 0.0;
+                    bvzz[ix][iy][iz]  = 0.0;
+
+                    vbxx[ix][iy][iz]  = 0.0;
+                    vbxy[ix][iy][iz]  = 0.0;
+                    vbxz[ix][iy][iz]  = 0.0;
+                    vbyx[ix][iy][iz]  = 0.0;
+                    vbyy[ix][iy][iz]  = 0.0;
+                    vbyz[ix][iy][iz]  = 0.0;
+                    vbzx[ix][iy][iz]  = 0.0;
+                    vbzy[ix][iy][iz]  = 0.0;
+                    vbzz[ix][iy][iz]  = 0.0;
                     for (int jx = 0; jx <= Lx; jx++) {
                         int kx = ix - jx + Nx;
                         if (kx < 0) continue;
@@ -209,7 +252,9 @@ int main() {
                                 vbzy[ix][iy][iz] += vz[jx][jy][jz] * by[kx][ky][kz] * DVQ;
                                 vbzz[ix][iy][iz] += vz[jx][jy][jz] * bz[kx][ky][kz] * DVQ;
 
-//                                    fprintf(f, " %+d %+d %+d %+d %+d %+d %+.8f\n", ix, iy, iz, jx, jy , jz, bbxx[ix][iy][iz]);
+//                                    fprintf(f, " %+d %+d %+d %+d %+d %+d %+.16f\n", ix, iy, iz, jx, jy, jz, vvxx[ix][iy][iz]);
+//                                    if (ix ==0 && iy == 0 && iz == 1 && jx ==0 && jy== 0 && jz ==0)
+//                                        break;
 //                                    fprintf(f, " %+d %+d %+d %+d %+d %+d %+.8f %+.8f %+.8f\n", ix, iy, iz, jx, jy , jz, bbxx[ix][iy][iz], bbxy[ix][iy][iz],bbxz[ix][iy][iz]);
 
                             }
@@ -238,7 +283,10 @@ int main() {
                     double nz = Qz / Q;
                     double Qalpha = Qy * sin(alpha) + Qz * cos(alpha);
 
-                    double fnvx = (vvxx[ix][iy][iz] + bbxx[ix][iy][iz]) * Qx +  (vvxy[ix][iy][iz] + bbxy[ix][iy][iz]) * Qy + (vvxz[ix][iy][iz] + bbxz[ix][iy][iz]) * Qz;
+                    double fnvx =
+                            (vvxx[ix][iy][iz] + bbxx[ix][iy][iz]) * Qx +
+                            (vvxy[ix][iy][iz] + bbxy[ix][iy][iz]) * Qy +
+                            (vvxz[ix][iy][iz] + bbxz[ix][iy][iz]) * Qz;
                     double fnvy =
                             (vvyx[ix][iy][iz] + bbyx[ix][iy][iz]) * Qx +
                             (vvyy[ix][iy][iz] + bbyy[ix][iy][iz]) * Qy +
@@ -247,7 +295,6 @@ int main() {
                             (vvzx[ix][iy][iz] + bbzx[ix][iy][iz]) * Qx +
                             (vvzy[ix][iy][iz] + bbzy[ix][iy][iz]) * Qy +
                             (vvzz[ix][iy][iz] + bbzz[ix][iy][iz]) * Qz;
-
 
                     double fnbx =
                             (bvxx[ix][iy][iz] - vbxx[ix][iy][iz]) * Qx +
@@ -262,58 +309,78 @@ int main() {
                             (bvzy[ix][iy][iz] - vbzy[ix][iy][iz]) * Qy +
                             (bvzz[ix][iy][iz] - vbzz[ix][iy][iz]) * Qz;
 
-
                     double ct = 2.0 * (ny * vx[ix][iy][iz] - omega * (nx * vy[ix][iy][iz] - ny * vx[ix][iy][iz]));
-                    double flvx = ct * nx + 2.0 * omega * vy[ix][iy][iz] + Qalpha * bx[ix][iy][iz] -
-                                  rnuk * Q2 * vx[ix][iy][iz];
-                    double flvy = -vx[ix][iy][iz] + ct * ny - 2.0 * omega * vx[ix][iy][iz] + Qalpha * by[ix][iy][iz] -
-                                  rnuk * Q2 * vy[ix][iy][iz];
+                    double flvx = ct * nx + 2.0 * omega * vy[ix][iy][iz] + Qalpha * bx[ix][iy][iz] -rnuk * Q2 * vx[ix][iy][iz];
+                    double flvy = -vx[ix][iy][iz] + ct * ny - 2.0 * omega * vx[ix][iy][iz] + Qalpha* by[ix][iy][iz] -rnuk * Q2 * vy[ix][iy][iz];
                     double flvz = ct * nz + Qalpha * bz[ix][iy][iz] - rnuk * Q2 * vz[ix][iy][iz];
 
-                    double flbx = -Qalpha * vx[ix][iy][iz] - rnum * Q2 * vx[ix][iy][iz];
-                    double flby = bx[ix][iy][iz] - Qalpha * vy[ix][iy][iz] - rnum * Q2 * vy[ix][iy][iz];
-                    double flbz = -Qalpha * vz[ix][iy][iz] - rnum * Q2 * vz[ix][iy][iz];
+                    double flbx = -Qalpha * vx[ix][iy][iz] - rnum * Q2 * bx[ix][iy][iz];
+                    double flby = bx[ix][iy][iz] - Qalpha * vy[ix][iy][iz] - rnum * Q2 * by[ix][iy][iz];
+                    double flbz = -Qalpha * vz[ix][iy][iz] - rnum * Q2 * bz[ix][iy][iz];
 
-                        double fvx = flvx + fnvx;
-                        double fvy = flvy + fnvy;
-                        double fvz = flvz + fnvz;
+                    double fvx = flvx + fnvx;
+                    double fvy = flvy + fnvy;
+                    double fvz = flvz + fnvz;
 
-                        double fbx = flbx + fnbx;
-                        double fby = flby + fnby;
-                        double fbz = flbz + fnbz;
+                    double fbx = flbx + fnbx;
+                    double fby = flby + fnby;
+                    double fbz = flbz + fnbz;
 
 //                    fprintf(f, " %+.1f %+.1f %+.1f %+.8f %+.8f %+.8f %+.8f %+.8f %+.8f %+.8f %+.8f %+.8f\n", Qx, Qy, Qz, bbxx[ix][iy][iz], bbxy[ix][iy][iz], bbxz[ix][iy][iz], bbyx[ix][iy][iz], bbyy[ix][iy][iz], bbyz[ix][iy][iz], bbzx[ix][iy][iz], bbzy[ix][iy][iz], bbzz[ix][iy][iz]);
-                    fprintf(f, " %+.1f %+.1f %+.1f %+.16f\n", Qx, Qy, Qz, vvxx[ix][iy][iz]);
+//                    fprintf(f, " %+.1f %+.1f %+.1f %+.16f\n", Qx, Qy, Qz, vvxx[ix][iy][iz]);
 
 
-                        double fvn = fvx * nx + fvy * ny + fvz * nz;
-                        double fbn = fbx * nx + fby * ny + fbz * nz;
+                    double fvn = fvx * nx + fvy * ny + fvz * nz;
+                    double fbn = fbx * nx + fby * ny + fbz * nz;
 
-                        fvx -= fvn * nx;
-                        fvy -= fvn * ny;
-                        fvz -= fvn * nz;
-                        fbx -= fbn * nx;
-                        fby -= fbn * ny;
-                        fbz -= fbn * nz;
+                    fvx -= fvn * nx;
+                    fvy -= fvn * ny;
+                    fvz -= fvn * nz;
+                    fbx -= fbn * nx;
+                    fby -= fbn * ny;
+                    fbz -= fbn * nz;
+
+                    vx[ix][iy][iz] += fvx * dt;
+                    vy[ix][iy][iz] += fvy * dt;
+                    vz[ix][iy][iz] += fvz * dt;
+
+                    bx[ix][iy][iz] += fbx * dt;
+                    by[ix][iy][iz] += fby * dt;
+                    bz[ix][iy][iz] += fbz * dt;
 
 
-                        vx[ix][iy][iz] += fvx * dt;
-                        vy[ix][iy][iz] += fvy * dt;
-                        vz[ix][iy][iz] += fvz * dt;
+//
+// Wind
+                    double s=Qy*dt;
+                    double x[NDimx],f[NDimx], fn[NDimx];
 
-                        bx[ix][iy][iz] += fbx * dt;
-                        by[ix][iy][iz] += fby * dt;
-                        bz[ix][iy][iz] += fbz * dt;
+                    for (int ixx = 0; ixx <= Lx; ixx++) {
+                        double Qxx = -Qx0 + ixx * DQx;
+                        x[ixx] = Qxx;
+                        f[ixx] = vx[ixx][iy][iz];
+                        fn[ixx] = shift(x,f,Qxx,Ni,NDimx,-Qx0,Qx0,s);
+                    }
+//
 
-//                        fprintf(f, " %+.1f %+.1f %+.1f %+.2f %+.2f %+.2f\n", Qx, Qy, Qz, vx[ix][iy][iz], vy[ix][iy][iz],vz[ix][iy][iz]);
+
+                    if (it == 10) {
+//                        fprintf(ffb, " %+.1f %+.1f %+.1f %+.16f %+.16f %+.16f\n", Qx, Qy, Qz, fnbx, fnby, fnbz);
+//                        fprintf(ffv, " %+.1f %+.1f %+.1f %+.16f %+.16f %+.16f\n", Qx, Qy, Qz, fnvx, fnvy, fnvz);
+
+                    fprintf(ffb, " %+.1f %+.1f %+.1f %+.16f %+.16f %+.16f\n", Qx, Qy, Qz, bx[ix][iy][iz],
+                            by[ix][iy][iz], bz[ix][iy][iz]);
+                    fprintf(ffv, " %+.1f %+.1f %+.1f %+.16f %+.16f %+.16f\n", Qx, Qy, Qz, vx[ix][iy][iz],
+                            vy[ix][iy][iz], vz[ix][iy][iz]);
+                    }
+
                 }
             }
         }
-        break;
+  //      if (Nt>9) break;
     }
-    fclose(f);
-    printf("Hello, World!\n");
-
+    fclose(ffb);
+    fclose(ffv);
+//    printf("Hello, World!\n");
 
     return 0;
 }
