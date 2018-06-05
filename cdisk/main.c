@@ -1,12 +1,13 @@
 #include <stdio.h>
 #include <math.h>
+#include <stdlib.h>
 
 const double alpha = 0.0;
 const double omega = -2. / 3.;
 const double rnuk = 0.02;
 const double rnum = 0.02;
 
-#define D 10
+#define D 12
 
 typedef struct Function
 {
@@ -103,8 +104,9 @@ int main() {
 
 
 //    FILE *f = fopen("q_v.txt", "w");
-    FILE *ffb = fopen("q_b.txt", "w");
-    FILE *ffv = fopen("q_v.txt", "w");
+    FILE *ffb = fopen("q_b-before.txt", "w");
+    FILE *ffbafter = fopen("q_b-after.txt", "w");
+//    FILE *ffv = fopen("q_v.txt", "w");
 
     for (int ix = 0; ix <= Lx; ix++) {
         for (int iy = 0; iy <= Ly; iy++) {
@@ -190,6 +192,7 @@ int main() {
                     vbzx[ix][iy][iz]  = 0.0;
                     vbzy[ix][iy][iz]  = 0.0;
                     vbzz[ix][iy][iz]  = 0.0;
+
                     for (int jx = 0; jx <= Lx; jx++) {
                         int kx = ix - jx + Nx;
                         if (kx < 0) continue;
@@ -202,10 +205,6 @@ int main() {
                                 int kz = iz - jz + Nz;
                                 if (kz < 0) continue;
                                 if (kz > Lz) continue;
-
-                                double Qx = -Qx0 + ix * DQx;
-                                double Qy = -Qy0 + iy * DQy;
-                                double Qz = -Qz0 + iz * DQz;
 
                                 if (((ix - Nx) * (ix - Nx) + (iy - Ny) * (iy - Ny) + (iz - Nz) * (iz - Nz)) == 0) {
                                     continue;
@@ -251,12 +250,6 @@ int main() {
                                 vbzx[ix][iy][iz] += vz[jx][jy][jz] * bx[kx][ky][kz] * DVQ;
                                 vbzy[ix][iy][iz] += vz[jx][jy][jz] * by[kx][ky][kz] * DVQ;
                                 vbzz[ix][iy][iz] += vz[jx][jy][jz] * bz[kx][ky][kz] * DVQ;
-
-//                                    fprintf(f, " %+d %+d %+d %+d %+d %+d %+.16f\n", ix, iy, iz, jx, jy, jz, vvxx[ix][iy][iz]);
-//                                    if (ix ==0 && iy == 0 && iz == 1 && jx ==0 && jy== 0 && jz ==0)
-//                                        break;
-//                                    fprintf(f, " %+d %+d %+d %+d %+d %+d %+.8f %+.8f %+.8f\n", ix, iy, iz, jx, jy , jz, bbxx[ix][iy][iz], bbxy[ix][iy][iz],bbxz[ix][iy][iz]);
-
                             }
                         }
                     }
@@ -329,7 +322,6 @@ int main() {
 //                    fprintf(f, " %+.1f %+.1f %+.1f %+.8f %+.8f %+.8f %+.8f %+.8f %+.8f %+.8f %+.8f %+.8f\n", Qx, Qy, Qz, bbxx[ix][iy][iz], bbxy[ix][iy][iz], bbxz[ix][iy][iz], bbyx[ix][iy][iz], bbyy[ix][iy][iz], bbyz[ix][iy][iz], bbzx[ix][iy][iz], bbzy[ix][iy][iz], bbzz[ix][iy][iz]);
 //                    fprintf(f, " %+.1f %+.1f %+.1f %+.16f\n", Qx, Qy, Qz, vvxx[ix][iy][iz]);
 
-
                     double fvn = fvx * nx + fvy * ny + fvz * nz;
                     double fbn = fbx * nx + fby * ny + fbz * nz;
 
@@ -348,38 +340,36 @@ int main() {
                     by[ix][iy][iz] += fby * dt;
                     bz[ix][iy][iz] += fbz * dt;
 
+                    fprintf(ffb, " %+.1f %+.1f %+.1f %+.16f\n", Qx, Qy, Qz, bx[ix][iy][iz]);
 
-//
-// Wind
                     double s=Qy*dt;
                     double x[NDimx],f[NDimx], fn[NDimx];
 
                     for (int ixx = 0; ixx <= Lx; ixx++) {
                         double Qxx = -Qx0 + ixx * DQx;
                         x[ixx] = Qxx;
-                        f[ixx] = vx[ixx][iy][iz];
-                        fn[ixx] = shift(x,f,Qxx,Ni,NDimx,-Qx0,Qx0,s);
+                        f[ixx] = bx[ixx][iy][iz];
                     }
-//
 
-
-                    if (it == 10) {
-//                        fprintf(ffb, " %+.1f %+.1f %+.1f %+.16f %+.16f %+.16f\n", Qx, Qy, Qz, fnbx, fnby, fnbz);
-//                        fprintf(ffv, " %+.1f %+.1f %+.1f %+.16f %+.16f %+.16f\n", Qx, Qy, Qz, fnvx, fnvy, fnvz);
-
-                    fprintf(ffb, " %+.1f %+.1f %+.1f %+.16f %+.16f %+.16f\n", Qx, Qy, Qz, bx[ix][iy][iz],
-                            by[ix][iy][iz], bz[ix][iy][iz]);
-                    fprintf(ffv, " %+.1f %+.1f %+.1f %+.16f %+.16f %+.16f\n", Qx, Qy, Qz, vx[ix][iy][iz],
-                            vy[ix][iy][iz], vz[ix][iy][iz]);
+                    for (int ixx = 0; ixx <= Lx; ixx++) {
+                        double Qxx = -Qx0 + ixx * DQx;
+                        printf("> %g \n",bx[ixx][iy][iz]);
+//                        bx[ixx][iy][iz] = shift(x,f,Qxx,Ni,NDimx,-Qx0,Qx0,s);
+                        printf(">> %g \n",shift(x,f,Qxx,Ni,NDimx,-Qx0,Qx0,s));
                     }
+
+                    fprintf(ffbafter, " %+.1f %+.1f %+.1f %+.16f\n", Qx, Qy, Qz, bx[ix][iy][iz]);
 
                 }
             }
         }
-  //      if (Nt>9) break;
+
+
+        //      if (Nt>9) break;
     }
     fclose(ffb);
-    fclose(ffv);
+    fclose(ffbafter);
+//    fclose(ffv);
 //    printf("Hello, World!\n");
 
     return 0;
