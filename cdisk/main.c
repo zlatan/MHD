@@ -9,44 +9,43 @@ const double rnum = 0.02;
 
 #define D 12
 
-typedef struct Function
-{
-    double argument[D+1];
-    double value[D+1];
+typedef struct Function {
+    double argument[D + 1];
+    double value[D + 1];
 } Function;
 
 
-
-double aitken(Function *f, int N, double point){
+double aitken(Function *f, int N, double point) {
 // TODO: SORT
-    for(int k=0;k<N; k++)
-        for(int i=k+1;i<=N;i++)
-            f->value[i]=((f->argument[k]-point)*f->value[i] - (f->argument[i]-point)*f->value[k]) / ((f->argument[k]-point) - (f->argument[i]-point));
+    for (int k = 0; k < N; k++)
+        for (int i = k + 1; i <= N; i++)
+            f->value[i] = ((f->argument[k] - point) * f->value[i] - (f->argument[i] - point) * f->value[k]) /
+                          ((f->argument[k] - point) - (f->argument[i] - point));
     //  f[i]      =                   ( (x[k]-xx)*f[i] - (x[i]-xx)*f[k] )                    /              ( (x[k]-xx)- (x[i]-xx) );
     return f->value[N];
 }
 
-double shift(double x[],double f[],double xx, int Ni, int N, double a, double b, double s){
+double shift(double x[], double f[], double xx, int Ni, int N, double a, double b, double s) {
     Function function;
-    int i,j;
+    int i, j;
     double dx;
     double ff;
-    dx=(b-a)/N;
-    j=(int) ( (xx-a)/dx );
+    dx = (b - a) / N;
+    j = (int) ((xx - a) / dx);
 
-    j-=2;
-    if (j<1)
-        j=1;
+    j -= 2;
+    if (j < 1)
+        j = 1;
 
-    if (j+Ni > N) // Ni<N
+    if (j + Ni > N) // Ni<N
         j = N - Ni;
 
-    for(i=0;i<=Ni;i++){
-        function.argument[i]=x[i+j];
-        function.value[i]=f[i+j];
+    for (i = 0; i <= Ni; i++) {
+        function.argument[i] = x[i + j];
+        function.value[i] = f[i + j];
     }
 
-    ff=aitken(&function,Ni,xx-s);
+    ff = aitken(&function, Ni, xx - s);
     return ff;
 }
 
@@ -62,9 +61,9 @@ int main() {
 
     int Nt = 10;
     double dt = 0.025;
-    double Tempi = Nt*dt;
+    double Tempi = Nt * dt;
 
-    int Ni=4;
+    int Ni = 4;
 
     int NDimx = 2 * Nx + 4, NDimy = 2 * Ny + 4, NDimz = 2 * Nz + 4;
 
@@ -153,45 +152,45 @@ int main() {
         for (int ix = 0; ix <= Lx; ix++) {
             for (int iy = 0; iy <= Ly; iy++) {
                 for (int iz = 0; iz <= Lz; iz++) {
-                    bbxx[ix][iy][iz]  = 0.0;
-                    bbxy[ix][iy][iz]  = 0.0;
-                    bbxz[ix][iy][iz]  = 0.0;
-                    bbyx[ix][iy][iz]  = 0.0;
-                    bbyy[ix][iy][iz]  = 0.0;
-                    bbyz[ix][iy][iz]  = 0.0;
-                    bbzx[ix][iy][iz]  = 0.0;
-                    bbzy[ix][iy][iz]  = 0.0;
-                    bbzz[ix][iy][iz]  = 0.0;
+                    bbxx[ix][iy][iz] = 0.0;
+                    bbxy[ix][iy][iz] = 0.0;
+                    bbxz[ix][iy][iz] = 0.0;
+                    bbyx[ix][iy][iz] = 0.0;
+                    bbyy[ix][iy][iz] = 0.0;
+                    bbyz[ix][iy][iz] = 0.0;
+                    bbzx[ix][iy][iz] = 0.0;
+                    bbzy[ix][iy][iz] = 0.0;
+                    bbzz[ix][iy][iz] = 0.0;
 
-                    vvxx[ix][iy][iz]  = 0.0;
-                    vvxy[ix][iy][iz]  = 0.0;
-                    vvxz[ix][iy][iz]  = 0.0;
-                    vvyx[ix][iy][iz]  = 0.0;
-                    vvyy[ix][iy][iz]  = 0.0;
-                    vvyz[ix][iy][iz]  = 0.0;
-                    vvzx[ix][iy][iz]  = 0.0;
-                    vvzy[ix][iy][iz]  = 0.0;
-                    vvzz[ix][iy][iz]  = 0.0;
+                    vvxx[ix][iy][iz] = 0.0;
+                    vvxy[ix][iy][iz] = 0.0;
+                    vvxz[ix][iy][iz] = 0.0;
+                    vvyx[ix][iy][iz] = 0.0;
+                    vvyy[ix][iy][iz] = 0.0;
+                    vvyz[ix][iy][iz] = 0.0;
+                    vvzx[ix][iy][iz] = 0.0;
+                    vvzy[ix][iy][iz] = 0.0;
+                    vvzz[ix][iy][iz] = 0.0;
 
-                    bvxx[ix][iy][iz]  = 0.0;
-                    bvxy[ix][iy][iz]  = 0.0;
-                    bvxz[ix][iy][iz]  = 0.0;
-                    bvyx[ix][iy][iz]  = 0.0;
-                    bvyy[ix][iy][iz]  = 0.0;
-                    bvyz[ix][iy][iz]  = 0.0;
-                    bvzx[ix][iy][iz]  = 0.0;
-                    bvzy[ix][iy][iz]  = 0.0;
-                    bvzz[ix][iy][iz]  = 0.0;
+                    bvxx[ix][iy][iz] = 0.0;
+                    bvxy[ix][iy][iz] = 0.0;
+                    bvxz[ix][iy][iz] = 0.0;
+                    bvyx[ix][iy][iz] = 0.0;
+                    bvyy[ix][iy][iz] = 0.0;
+                    bvyz[ix][iy][iz] = 0.0;
+                    bvzx[ix][iy][iz] = 0.0;
+                    bvzy[ix][iy][iz] = 0.0;
+                    bvzz[ix][iy][iz] = 0.0;
 
-                    vbxx[ix][iy][iz]  = 0.0;
-                    vbxy[ix][iy][iz]  = 0.0;
-                    vbxz[ix][iy][iz]  = 0.0;
-                    vbyx[ix][iy][iz]  = 0.0;
-                    vbyy[ix][iy][iz]  = 0.0;
-                    vbyz[ix][iy][iz]  = 0.0;
-                    vbzx[ix][iy][iz]  = 0.0;
-                    vbzy[ix][iy][iz]  = 0.0;
-                    vbzz[ix][iy][iz]  = 0.0;
+                    vbxx[ix][iy][iz] = 0.0;
+                    vbxy[ix][iy][iz] = 0.0;
+                    vbxz[ix][iy][iz] = 0.0;
+                    vbyx[ix][iy][iz] = 0.0;
+                    vbyy[ix][iy][iz] = 0.0;
+                    vbyz[ix][iy][iz] = 0.0;
+                    vbzx[ix][iy][iz] = 0.0;
+                    vbzy[ix][iy][iz] = 0.0;
+                    vbzz[ix][iy][iz] = 0.0;
 
                     for (int jx = 0; jx <= Lx; jx++) {
                         int kx = ix - jx + Nx;
@@ -303,8 +302,10 @@ int main() {
                             (bvzz[ix][iy][iz] - vbzz[ix][iy][iz]) * Qz;
 
                     double ct = 2.0 * (ny * vx[ix][iy][iz] - omega * (nx * vy[ix][iy][iz] - ny * vx[ix][iy][iz]));
-                    double flvx = ct * nx + 2.0 * omega * vy[ix][iy][iz] + Qalpha * bx[ix][iy][iz] -rnuk * Q2 * vx[ix][iy][iz];
-                    double flvy = -vx[ix][iy][iz] + ct * ny - 2.0 * omega * vx[ix][iy][iz] + Qalpha* by[ix][iy][iz] -rnuk * Q2 * vy[ix][iy][iz];
+                    double flvx = ct * nx + 2.0 * omega * vy[ix][iy][iz] + Qalpha * bx[ix][iy][iz] -
+                                  rnuk * Q2 * vx[ix][iy][iz];
+                    double flvy = -vx[ix][iy][iz] + ct * ny - 2.0 * omega * vx[ix][iy][iz] + Qalpha * by[ix][iy][iz] -
+                                  rnuk * Q2 * vy[ix][iy][iz];
                     double flvz = ct * nz + Qalpha * bz[ix][iy][iz] - rnuk * Q2 * vz[ix][iy][iz];
 
                     double flbx = -Qalpha * vx[ix][iy][iz] - rnum * Q2 * bx[ix][iy][iz];
@@ -340,31 +341,57 @@ int main() {
                     by[ix][iy][iz] += fby * dt;
                     bz[ix][iy][iz] += fbz * dt;
 
-                    fprintf(ffb, " %+.1f %+.1f %+.1f %+.16f\n", Qx, Qy, Qz, bx[ix][iy][iz]);
-
-                    double s=Qy*dt;
-                    double x[NDimx],f[NDimx], fn[NDimx];
-
-                    for (int ixx = 0; ixx <= Lx; ixx++) {
-                        double Qxx = -Qx0 + ixx * DQx;
-                        x[ixx] = Qxx;
-                        f[ixx] = bx[ixx][iy][iz];
-                    }
-
-                    for (int ixx = 0; ixx <= Lx; ixx++) {
-                        double Qxx = -Qx0 + ixx * DQx;
-                        printf("> %g \n",bx[ixx][iy][iz]);
-//                        bx[ixx][iy][iz] = shift(x,f,Qxx,Ni,NDimx,-Qx0,Qx0,s);
-                        printf(">> %g \n",shift(x,f,Qxx,Ni,NDimx,-Qx0,Qx0,s));
-                    }
-
-                    fprintf(ffbafter, " %+.1f %+.1f %+.1f %+.16f\n", Qx, Qy, Qz, bx[ix][iy][iz]);
+//                    fprintf(ffb, " %+.1f %+.1f %+.1f %+.16f\n", Qx, Qy, Qz, bx[ix][iy][iz]);
+//
+//                    double s=Qy*dt;
+//                    double x[NDimx],f[NDimx], fn[NDimx];
+//
+//                    for (int ixx = 0; ixx <= Lx; ixx++) {
+//                        double Qxx = -Qx0 + ixx * DQx;
+//                        x[ixx] = Qxx;
+//                        f[ixx] = bx[ixx][iy][iz];
+//                    }
+//
+//                    for (int ixx = 0; ixx <= Lx; ixx++) {
+//                        double Qxx = -Qx0 + ixx * DQx;
+//                        printf("> %g \n",bx[ixx][iy][iz]);
+//  //                      bx[ixx][iy][iz] = shift(x,f,Qxx,Ni,NDimx,-Qx0,Qx0,s);
+//                        printf(">> %g \n",shift(x,f,Qxx,Ni,NDimx,-Qx0,Qx0,s));
+//                    }
+//
+//                    fprintf(ffbafter, " %+.1f %+.1f %+.1f %+.16f\n", Qx, Qy, Qz, bx[ix][iy][iz]);
 
                 }
             }
         }
 
+        double x[NDimx], f[NDimx], fn[NDimx];
 
+        for (int iy = 0; iy <= Ly; iy++) {
+            for (int iz = 0; iz <= Lz; iz++) {
+                for (int ix = 0; ix <= Lx; ix++) {
+                    double Qx = -Qx0 + ix * DQx;
+
+                    f[ix] = bx[ix][iy][iz];
+                    x[ix] = Qx;
+                }
+            }
+        }
+
+        for (int iy = 0; iy <= Ly; iy++) {
+            for (int iz = 0; iz <= Lz; iz++) {
+                for (int ix = 0; ix <= Lx; ix++) {
+                    double Qx = -Qx0 + ix * DQx;
+                    double Qy = -Qy0 + iy * DQy;
+                    double s=Qy*dt;
+//                    printf("Qx=%+.1f Qy=%+.1f Qz=%+.1f %g \n", Qx, Qy, Qz, bx[ix][iy][iz]);
+                    printf(">> %g \n",shift(x,f,Qx,Ni,NDimx,-Qx0,Qx0,s));
+                }
+            }
+        }
+
+
+        break;
         //      if (Nt>9) break;
     }
     fclose(ffb);
