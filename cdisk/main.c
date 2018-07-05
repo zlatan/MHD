@@ -365,18 +365,31 @@ int main() {
             }
         }
 
-        double x[NDimx], f[NDimx], fn[NDimx];
+        double x[NDimx], f[NDimx];
 
         for (int iy = 0; iy <= Ly; iy++) {
             for (int iz = 0; iz <= Lz; iz++) {
                 for (int ix = 0; ix <= Lx; ix++) {
                     double Qx = -Qx0 + ix * DQx;
-
                     f[ix] = bx[ix][iy][iz];
                     x[ix] = Qx;
                 }
             }
         }
+
+        //
+        puts("Input f:");
+        for (int ix = 0; ix <= Lx; ix++) {
+            printf(" %g ",f[ix]);
+        }
+        puts("\nInput x:");
+        for (int ix = 0; ix <= Lx; ix++) {
+            printf(" %g ",x[ix]);
+        }
+
+        puts("\n");
+
+        //
 
         for (int iy = 0; iy <= Ly; iy++) {
             for (int iz = 0; iz <= Lz; iz++) {
