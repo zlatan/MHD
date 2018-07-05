@@ -7,7 +7,7 @@ const double omega = -2. / 3.;
 const double rnuk = 0.02;
 const double rnum = 0.02;
 
-#define D 12
+#define D 4
 
 typedef struct Function {
     double argument[D + 1];
@@ -30,10 +30,13 @@ double shift(double x[], double f[], double xx, int Ni, int N, double a, double 
     int i, j;
     double dx;
     double ff;
-    dx = (b - a) / N;
-    j = (int) ((xx - a) / dx);
 
-    j -= 2;
+    j = i - Ni/2;
+
+//    dx = (b - a) / N;
+//    j = (int) ((xx - a) / dx);
+//
+//    j -= 2;
     if (j < 1)
         j = 1;
 
@@ -342,23 +345,6 @@ int main() {
                     bz[ix][iy][iz] += fbz * dt;
 
 //                    fprintf(ffb, " %+.1f %+.1f %+.1f %+.16f\n", Qx, Qy, Qz, bx[ix][iy][iz]);
-//
-//                    double s=Qy*dt;
-//                    double x[NDimx],f[NDimx], fn[NDimx];
-//
-//                    for (int ixx = 0; ixx <= Lx; ixx++) {
-//                        double Qxx = -Qx0 + ixx * DQx;
-//                        x[ixx] = Qxx;
-//                        f[ixx] = bx[ixx][iy][iz];
-//                    }
-//
-//                    for (int ixx = 0; ixx <= Lx; ixx++) {
-//                        double Qxx = -Qx0 + ixx * DQx;
-//                        printf("> %g \n",bx[ixx][iy][iz]);
-//  //                      bx[ixx][iy][iz] = shift(x,f,Qxx,Ni,NDimx,-Qx0,Qx0,s);
-//                        printf(">> %g \n",shift(x,f,Qxx,Ni,NDimx,-Qx0,Qx0,s));
-//                    }
-//
 //                    fprintf(ffbafter, " %+.1f %+.1f %+.1f %+.16f\n", Qx, Qy, Qz, bx[ix][iy][iz]);
 
                 }
@@ -370,42 +356,36 @@ int main() {
         for (int iy = 0; iy <= Ly; iy++) {
             for (int iz = 0; iz <= Lz; iz++) {
                 for (int ix = 0; ix <= Lx; ix++) {
-                    double Qx = -Qx0 + ix * DQx;
+                    double Qx = -Qx0 + ix* DQx;
                     f[ix] = bx[ix][iy][iz];
+//                for (int ix = 0; ix <= (Lx -2); ix++) {
+//                    double Qx = -Qx0 + (ix +1 )* DQx;
+//                    f[ix] = bx[ix+1][iy][iz];
                     x[ix] = Qx;
                 }
             }
         }
 
-        //
-        puts("Input f:");
-        for (int ix = 0; ix <= Lx; ix++) {
-            printf(" %g ",f[ix]);
-        }
-        puts("\nInput x:");
-        for (int ix = 0; ix <= Lx; ix++) {
-            printf(" %g ",x[ix]);
-        }
-
-        puts("\n");
-
-        //
 
         for (int iy = 0; iy <= Ly; iy++) {
             for (int iz = 0; iz <= Lz; iz++) {
                 for (int ix = 0; ix <= Lx; ix++) {
                     double Qx = -Qx0 + ix * DQx;
                     double Qy = -Qy0 + iy * DQy;
+                    double Qz = -Qz0 + iz * DQz;
+
                     double s=Qy*dt;
+                    fprintf(ffb, " %+.1f %+.1f %+.1f %+.16f\n", Qx, Qy, Qz, bx[ix][iy][iz]);
 //                    printf("Qx=%+.1f Qy=%+.1f Qz=%+.1f %g \n", Qx, Qy, Qz, bx[ix][iy][iz]);
-                    printf(">> %g \n",shift(x,f,Qx,Ni,NDimx,-Qx0,Qx0,s));
+//                    printf(">> %g \n",shift(x,f,Qx,Ni,NDimx,-Qx0,Qx0,s));
+                    bx[ix][iy][iz] = shift(x,f,Qx,Ni,NDimx,-Qx0,Qx0,s);
+                    fprintf(ffbafter, " %+.1f %+.1f %+.1f %+.16f\n", Qx, Qy, Qz, bx[ix][iy][iz]);
+
                 }
             }
         }
+//        break;
 
-
-        break;
-        //      if (Nt>9) break;
     }
     fclose(ffb);
     fclose(ffbafter);
