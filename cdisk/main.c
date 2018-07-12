@@ -355,38 +355,34 @@ int main() {
 
         for (int iy = 0; iy <= Ly; iy++) {
             for (int iz = 0; iz <= Lz; iz++) {
-                for (int ix = 0; ix <= Lx; ix++) {
-                    double Qx = -Qx0 + ix* DQx;
-                    f[ix] = bx[ix][iy][iz];
-//                for (int ix = 0; ix <= (Lx -2); ix++) {
-//                    double Qx = -Qx0 + (ix +1 )* DQx;
-//                    f[ix] = bx[ix+1][iy][iz];
-                    x[ix] = Qx;
-                }
-            }
-        }
+                double Qy = -Qy0 + iy * DQy;
+                double Qz = -Qz0 + iz * DQz;
+                double s=Qy*dt;
 
-
-        for (int iy = 0; iy <= Ly; iy++) {
-            for (int iz = 0; iz <= Lz; iz++) {
                 for (int ix = 0; ix <= Lx; ix++) {
                     double Qx = -Qx0 + ix * DQx;
-                    double Qy = -Qy0 + iy * DQy;
-                    double Qz = -Qz0 + iz * DQz;
+                    f[ix] = bx[ix][iy][iz];
+                    x[ix] = Qx;
 
-                    double s=Qy*dt;
-                    fprintf(ffb, " %+.1f %+.1f %+.1f %+.16f\n", Qx, Qy, Qz, bx[ix][iy][iz]);
-//                    printf("Qx=%+.1f Qy=%+.1f Qz=%+.1f %g \n", Qx, Qy, Qz, bx[ix][iy][iz]);
-//                    printf(">> %g \n",shift(x,f,Qx,Ni,NDimx,-Qx0,Qx0,s));
+                }
+
+                for (int ix = 0; ix <= Lx; ix++) {
+                    double Qx = -Qx0 + ix * DQx;
+                    printf("Qx=%f Qy=%f Qz= %f bx=%g \n", Qx,Qy,Qz,bx[ix][iy][iz]);
                     bx[ix][iy][iz] = shift(x,f,Qx,Ni,NDimx,-Qx0,Qx0,s);
-                    fprintf(ffbafter, " %+.1f %+.1f %+.1f %+.16f\n", Qx, Qy, Qz, bx[ix][iy][iz]);
-
+                    printf("Qx=%f Qy=%f Qz= %f wind=%g \n", Qx,Qy,Qz,bx[ix][iy][iz]);
                 }
             }
         }
-//        break;
 
-    }
+        break;
+
+//                    fprintf(ffb, " %+.1f %+.1f %+.1f %+.16f\n", Qx, Qy, Qz, bx[ix][iy][iz]);
+//                    printf("Qx=%+.1f Qy=%+.1f Qz=%+.1f %g \n", Qx, Qy, Qz, bx[ix][iy][iz]);
+//                    printf(">> %g \n",shift(x,f,Qx,Ni,NDimx,-Qx0,Qx0,s));
+//                    fprintf(ffbafter, " %+.1f %+.1f %+.1f %+.16f\n", Qx, Qy, Qz, bx[ix][iy][iz]);
+
+        }
     fclose(ffb);
     fclose(ffbafter);
 //    fclose(ffv);
