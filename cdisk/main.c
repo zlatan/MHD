@@ -1,11 +1,14 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
+#include <omp.h>
+#include <string.h>
+
 
 const double alpha = 0.0;
 const double omega = -2. / 3.;
-const double rnuk = 0.00;
-const double rnum = 0.00;
+const double rnuk = 0.01;
+const double rnum = 0.01;
 
 #define D 4
 
@@ -53,16 +56,16 @@ double shift(double x[], double f[], double xx, int Ni, int N, double a, double 
 
 
 int main() {
-    double Qx0 = 2.0;
-    double Qy0 = 2.0;
-    double Qz0 = 2.0;
+    double Qx0 = 4.0;
+    double Qy0 = 4.0;
+    double Qz0 = 4.0;
 
     int Nx = 4;
     int Ny = 4;
     int Nz = 4;
 
-    int Nt = 10;
-    double dt = 0.025;
+    int Nt = 10000;
+    double dt = 0.0025;
 
     int Ni = 4;
 
@@ -102,7 +105,7 @@ int main() {
             vbzx[NDimx][NDimy][NDimz], vbzy[NDimx][NDimy][NDimz], vbzz[NDimx][NDimy][NDimz];
 
 
-    FILE *file = fopen("debug.txt", "w");
+    FILE *file;
 
     for (int ix = 0; ix <= Lx; ix++) {
         for (int iy = 0; iy <= Ly; iy++) {
@@ -146,6 +149,10 @@ int main() {
 
 
     for (int it = 1; it <= Nt; it++) {
+        char filename[16];
+        sprintf(filename, "energy_%d.txt", it);
+        file = fopen(filename, "w");
+
         for (int ix = 0; ix <= Lx; ix++) {
             for (int iy = 0; iy <= Ly; iy++) {
                 for (int iz = 0; iz <= Lz; iz++) {
@@ -189,6 +196,7 @@ int main() {
                     vbzy[ix][iy][iz] = 0.0;
                     vbzz[ix][iy][iz] = 0.0;
 
+#pragma omp for
                     for (int jx = 0; jx <= Lx; jx++) {
                         int kx = ix - jx + Nx;
                         if (kx < 0) continue;
@@ -404,6 +412,28 @@ int main() {
                     bx[ix][iy][iz] -= bn * nx;
                     by[ix][iy][iz] -= bn * ny;
                     bz[ix][iy][iz] -= bn * nz;
+
+//                    fprintf(file, "%i %+.1f %+.1f %+.1f %+.16f\n", it, Qx, Qy, Qz, vx[ix][iy][iz]*vx[ix][iy][iz] +
+//                                                                                   vy[ix][iy][iz]*vy[ix][iy][iz] +
+//                                                                                   vz[ix][iy][iz]*vz[ix][iy][iz] +
+//                                                                                   bx[ix][iy][iz]*bx[ix][iy][iz] +
+//                                                                                   by[ix][iy][iz]*by[ix][iy][iz] +
+//                                                                                   bz[ix][iy][iz]*bz[ix][iy][iz]);
+
+//                    fprintf(file, "%f %f %f %g\n", Qx, Qy, Qz, vx[ix][iy][iz] * vx[ix][iy][iz] +
+//                                                               vy[ix][iy][iz] * vy[ix][iy][iz] +
+//                                                               vz[ix][iy][iz] * vz[ix][iy][iz] +
+//                                                               bx[ix][iy][iz] * bx[ix][iy][iz] +
+//                                                               by[ix][iy][iz] * by[ix][iy][iz] +
+//                                                               bz[ix][iy][iz] * bz[ix][iy][iz]);
+
+                    printf("%i %+.1f %+.1f %+.1f %+.16f\n", it, Qx, Qy, Qz, vx[ix][iy][iz] * vx[ix][iy][iz] +
+                                                                            vy[ix][iy][iz] * vy[ix][iy][iz] +
+                                                                            vz[ix][iy][iz] * vz[ix][iy][iz] +
+                                                                            bx[ix][iy][iz] * bx[ix][iy][iz] +
+                                                                            by[ix][iy][iz] * by[ix][iy][iz] +
+                                                                            bz[ix][iy][iz] * bz[ix][iy][iz]);
+
                 }
             }
         }
@@ -411,16 +441,16 @@ int main() {
 
     }
 
-    for (int ix = 0; ix <= Lx; ix++) {
-        for (int iy = 0; iy <= Ly; iy++) {
-        for (int iz = 0; iz <= Lz; iz++) {
-            double Qy = -Qy0 + iy * DQy;
-            double Qz = -Qz0 + iz * DQz;
-            double Qx = -Qx0 + ix * DQx;
-                fprintf(file, " %+.1f %+.1f %+.1f %+.16f\n", Qx, Qy, Qz, vx[ix][iy][iz]);
-            }
-        }
-    }
+//    for (int ix = 0; ix <= Lx; ix++) {
+//        for (int iy = 0; iy <= Ly; iy++) {
+//        for (int iz = 0; iz <= Lz; iz++) {
+//            double Qy = -Qy0 + iy * DQy;
+//            double Qz = -Qz0 + iz * DQz;
+//            double Qx = -Qx0 + ix * DQx;
+//                fprintf(file, " %+.1f %+.1f %+.1f %+.16f\n", Qx, Qy, Qz, vx[ix][iy][iz]);
+//            }
+//        }
+//    }
     fclose(file);
     return 0;
 }
