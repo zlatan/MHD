@@ -24,6 +24,30 @@ gsl_matrix_free (tmp);
 return result;
 }
 
+
+gsl_matrix * inverseOfMatrixMultiply(gsl_matrix *m, gsl_matrix *p)
+{
+gsl_matrix * tmp = gsl_matrix_alloc (4, 6);
+gsl_matrix * result = gsl_matrix_alloc (4, 4);
+gsl_matrix * inverse = gsl_matrix_alloc (4, 4);
+gsl_permutation * per = gsl_permutation_alloc (4);
+
+int s;
+
+gsl_matrix_set_zero(tmp);
+gsl_matrix_set_zero(result);
+gsl_matrix_set_zero(inverse);
+
+
+gsl_blas_dgemm (CblasNoTrans, CblasNoTrans, 1.0, p, m, 0.0, tmp);
+gsl_blas_dgemm (CblasNoTrans, CblasTrans, 1.0, tmp, p, 0.0, result);
+gsl_matrix_free (tmp);
+
+gsl_linalg_LU_decomp (result, per, &s);    
+gsl_linalg_LU_invert (result, per, inverse);
+return inverse;
+}
+
 typedef struct vector
 {
       double x;
@@ -153,6 +177,37 @@ int main() {
                                 vvzx[ix][iy][iz] += vz[jx][jy][jz] * vx[kx][ky][kz] * DVQ;
                                 vvzy[ix][iy][iz] += vz[jx][jy][jz] * vy[kx][ky][kz] * DVQ;
                                 vvzz[ix][iy][iz] += vz[jx][jy][jz] * vz[kx][ky][kz] * DVQ;
+
+								bbxx[ix][iy][iz] + =bx[jx][jy][jz] * bx[kx][ky][kz] * DVQ;
+                                bbxy[ix][iy][iz]+=bx[jx][jy][jz]*by[kx][ky][kz]*DVQ;
+                                bbxz[ix][iy][iz]+=bx[jx][jy][jz]*bz[kx][ky][kz]*DVQ;
+								bbyx[ix][iy][iz]+=by[jx][jy][jz]*bx[kx][ky][kz]*DVQ;
+                                bbyy[ix][iy][iz]+=by[jx][jy][jz]*by[kx][ky][kz]*DVQ;
+                                bbyz[ix][iy][iz]+=by[jx][jy][jz]*bz[kx][ky][kz]*DVQ;
+								bbzx[ix][iy][iz]+=bz[jx][jy][jz]*bx[kx][ky][kz]*DVQ;
+                                bbzy[ix][iy][iz]+=bz[jx][jy][jz]*by[kx][ky][kz]*DVQ;
+                                bbzz[ix][iy][iz]+=bz[jx][jy][jz]*bz[kx][ky][kz]*DVQ;
+								
+								bvxx[ix][iy][iz]+=bx[jx][jy][jz]*vx[kx][ky][kz]*DVQ;
+                                bvxy[ix][iy][iz]+=bx[jx][jy][jz]*vy[kx][ky][kz]*DVQ; 
+                                bvxz[ix][iy][iz]+=bx[jx][jy][jz]*vz[kx][ky][kz]*DVQ;
+								bvyx[ix][iy][iz]+=by[jx][jy][jz]*vx[kx][ky][kz]*DVQ; 
+                                bvyy[ix][iy][iz]+=by[jx][jy][jz]*vy[kx][ky][kz]*DVQ; 
+                                bvyz[ix][iy][iz]+=by[jx][jy][jz]*vz[kx][ky][kz]*DVQ;
+								bvzx[ix][iy][iz]+=bz[jx][jy][jz]*vx[kx][ky][kz]*DVQ;
+                                bvzy[ix][iy][iz]+=bz[jx][jy][jz]*vy[kx][ky][kz]*DVQ;
+                                bvzz[ix][iy][iz]+=bz[jx][jy][jz]*vz[kx][ky][kz]*DVQ;
+
+								vbxx[ix][iy][iz]+=vx[jx][jy][jz]*bx[kx][ky][kz]*DVQ;
+                                vbxy[ix][iy][iz]+=vx[jx][jy][jz]*by[kx][ky][kz]*DVQ;
+                                vbxz[ix][iy][iz]+=vx[jx][jy][jz]*bz[kx][ky][kz]*DVQ;
+								vbyx[ix][iy][iz]+=vy[jx][jy][jz]*bx[kx][ky][kz]*DVQ;
+                                vbyy[ix][iy][iz]+=vy[jx][jy][jz]*by[kx][ky][kz]*DVQ;
+                                vbyz[ix][iy][iz]+=vy[jx][jy][jz]*bz[kx][ky][kz]*DVQ;
+								vbzx[ix][iy][iz]+=vz[jx][jy][jz]*bx[kx][ky][kz]*DVQ;
+                                vbzy[ix][iy][iz]+=vz[jx][jy][jz]*by[kx][ky][kz]*DVQ;
+                                vbzz[ix][iy][iz]+=vz[jx][jy][jz]*bz[kx][ky][kz]*DVQ;
+
                             }
                         }
                     }
@@ -307,7 +362,7 @@ int main() {
                     gsl_matrix_set (m, 5, 4, -2*nx*nz*w);
                     gsl_matrix_set (m, 5, 5, -nu_k*Q2);
 
-                    gsl_matrix * result = matrixMultiply(m,p);
+                    gsl_matrix * result = inverseOfMatrixMultiply(m,p);
 
 
                 }
