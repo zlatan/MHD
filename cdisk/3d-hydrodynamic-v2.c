@@ -5,11 +5,14 @@
 #include <string.h>
 #include <gsl/gsl_matrix.h>
 #include <gsl/gsl_blas.h>
+#include <gsl/gsl_linalg.h>
 
-
-const double nu = 0.003;
 const double vc = 0.1;
 const double vphi = 0.2;
+const double alpha = 0.0;
+const double w = -2. / 3.;
+const double nu_k = 0.001;
+const double nu_m = 0.001;
 
 
 gsl_matrix * matrixMultiply(gsl_matrix *m, gsl_matrix *p)
@@ -80,9 +83,12 @@ int main() {
     double vx[NDimx][NDimy][NDimz];
     double vy[NDimx][NDimy][NDimz];
     double vz[NDimx][NDimy][NDimz];
+
+    double bx[NDimx][NDimy][NDimz];
+    double by[NDimx][NDimy][NDimz];
+    double bz[NDimx][NDimy][NDimz];
     
     unit_vector e;
-    Matrixp pmatrix;
 
     int Lx = 2 * Nx;
     int Ly = 2 * Ny;
@@ -94,9 +100,18 @@ int main() {
 
     double DVQ = DQx * DQy * DQz / ((2 * M_PI) * (2 * M_PI) * (2 * M_PI));
 
-    double vvxx[NDimx][NDimy][NDimz], vvxy[NDimx][NDimy][NDimz], vvxz[NDimx][NDimy][NDimz],
-           vvyx[NDimx][NDimy][NDimz], vvyy[NDimx][NDimy][NDimz], vvyz[NDimx][NDimy][NDimz],
-           vvzx[NDimx][NDimy][NDimz], vvzy[NDimx][NDimy][NDimz], vvzz[NDimx][NDimy][NDimz];
+    double bbyx[NDimx][NDimy][NDimz], bbyy[NDimx][NDimy][NDimz], bbyz[NDimx][NDimy][NDimz],
+            bbxx[NDimx][NDimy][NDimz], bbxy[NDimx][NDimy][NDimz], bbxz[NDimx][NDimy][NDimz],
+            bbzx[NDimx][NDimy][NDimz], bbzy[NDimx][NDimy][NDimz], bbzz[NDimx][NDimy][NDimz],
+            vvxx[NDimx][NDimy][NDimz], vvxy[NDimx][NDimy][NDimz], vvxz[NDimx][NDimy][NDimz],
+            vvyx[NDimx][NDimy][NDimz], vvyy[NDimx][NDimy][NDimz], vvyz[NDimx][NDimy][NDimz],
+            vvzx[NDimx][NDimy][NDimz], vvzy[NDimx][NDimy][NDimz], vvzz[NDimx][NDimy][NDimz],
+            bvxx[NDimx][NDimy][NDimz], bvxy[NDimx][NDimy][NDimz], bvxz[NDimx][NDimy][NDimz],
+            bvyx[NDimx][NDimy][NDimz], bvyy[NDimx][NDimy][NDimz], bvyz[NDimx][NDimy][NDimz],
+            bvzx[NDimx][NDimy][NDimz], bvzy[NDimx][NDimy][NDimz], bvzz[NDimx][NDimy][NDimz],
+            vbxx[NDimx][NDimy][NDimz], vbxy[NDimx][NDimy][NDimz], vbxz[NDimx][NDimy][NDimz],
+            vbyx[NDimx][NDimy][NDimz], vbyy[NDimx][NDimy][NDimz], vbyz[NDimx][NDimy][NDimz],
+            vbzx[NDimx][NDimy][NDimz], vbzy[NDimx][NDimy][NDimz], vbzz[NDimx][NDimy][NDimz];
 
     for (int ix = 0; ix <= Lx; ix++) {
         for (int iy = 0; iy <= Ly; iy++) {
@@ -139,6 +154,16 @@ int main() {
         for (int ix = 0; ix <= Lx; ix++) {
             for (int iy = 0; iy <= Ly; iy++) {
                 for (int iz = 0; iz <= Lz; iz++) {
+                    bbxx[ix][iy][iz] = 0.0;
+                    bbxy[ix][iy][iz] = 0.0;
+                    bbxz[ix][iy][iz] = 0.0;
+                    bbyx[ix][iy][iz] = 0.0;
+                    bbyy[ix][iy][iz] = 0.0;
+                    bbyz[ix][iy][iz] = 0.0;
+                    bbzx[ix][iy][iz] = 0.0;
+                    bbzy[ix][iy][iz] = 0.0;
+                    bbzz[ix][iy][iz] = 0.0;
+
                     vvxx[ix][iy][iz] = 0.0;
                     vvxy[ix][iy][iz] = 0.0;
                     vvxz[ix][iy][iz] = 0.0;
@@ -148,6 +173,26 @@ int main() {
                     vvzx[ix][iy][iz] = 0.0;
                     vvzy[ix][iy][iz] = 0.0;
                     vvzz[ix][iy][iz] = 0.0;
+
+                    bvxx[ix][iy][iz] = 0.0;
+                    bvxy[ix][iy][iz] = 0.0;
+                    bvxz[ix][iy][iz] = 0.0;
+                    bvyx[ix][iy][iz] = 0.0;
+                    bvyy[ix][iy][iz] = 0.0;
+                    bvyz[ix][iy][iz] = 0.0;
+                    bvzx[ix][iy][iz] = 0.0;
+                    bvzy[ix][iy][iz] = 0.0;
+                    bvzz[ix][iy][iz] = 0.0;
+
+                    vbxx[ix][iy][iz] = 0.0;
+                    vbxy[ix][iy][iz] = 0.0;
+                    vbxz[ix][iy][iz] = 0.0;
+                    vbyx[ix][iy][iz] = 0.0;
+                    vbyy[ix][iy][iz] = 0.0;
+                    vbyz[ix][iy][iz] = 0.0;
+                    vbzx[ix][iy][iz] = 0.0;
+                    vbzy[ix][iy][iz] = 0.0;
+                    vbzz[ix][iy][iz] = 0.0;
 
 
                     #pragma omp for
@@ -167,7 +212,17 @@ int main() {
                                 if (((ix - Nx) * (ix - Nx) + (iy - Ny) * (iy - Ny) + (iz - Nz) * (iz - Nz)) == 0) {
                                     continue;
                                 }
-
+                                //bb
+                                bbxx[ix][iy][iz] += bx[jx][jy][jz] * bx[kx][ky][kz] * DVQ;
+                                bbxy[ix][iy][iz] += bx[jx][jy][jz] * by[kx][ky][kz] * DVQ;
+                                bbxz[ix][iy][iz] += bx[jx][jy][jz] * bz[kx][ky][kz] * DVQ;
+                                bbyx[ix][iy][iz] += by[jx][jy][jz] * bx[kx][ky][kz] * DVQ;
+                                bbyy[ix][iy][iz] += by[jx][jy][jz] * by[kx][ky][kz] * DVQ;
+                                bbyz[ix][iy][iz] += by[jx][jy][jz] * bz[kx][ky][kz] * DVQ;
+                                bbzx[ix][iy][iz] += bz[jx][jy][jz] * bx[kx][ky][kz] * DVQ;
+                                bbzy[ix][iy][iz] += bz[jx][jy][jz] * by[kx][ky][kz] * DVQ;
+                                bbzz[ix][iy][iz] += bz[jx][jy][jz] * bz[kx][ky][kz] * DVQ;
+                                //vv
                                 vvxx[ix][iy][iz] += vx[jx][jy][jz] * vx[kx][ky][kz] * DVQ;
                                 vvxy[ix][iy][iz] += vx[jx][jy][jz] * vy[kx][ky][kz] * DVQ;
                                 vvxz[ix][iy][iz] += vx[jx][jy][jz] * vz[kx][ky][kz] * DVQ;
@@ -177,37 +232,26 @@ int main() {
                                 vvzx[ix][iy][iz] += vz[jx][jy][jz] * vx[kx][ky][kz] * DVQ;
                                 vvzy[ix][iy][iz] += vz[jx][jy][jz] * vy[kx][ky][kz] * DVQ;
                                 vvzz[ix][iy][iz] += vz[jx][jy][jz] * vz[kx][ky][kz] * DVQ;
-
-								bbxx[ix][iy][iz] + =bx[jx][jy][jz] * bx[kx][ky][kz] * DVQ;
-                                bbxy[ix][iy][iz]+=bx[jx][jy][jz]*by[kx][ky][kz]*DVQ;
-                                bbxz[ix][iy][iz]+=bx[jx][jy][jz]*bz[kx][ky][kz]*DVQ;
-								bbyx[ix][iy][iz]+=by[jx][jy][jz]*bx[kx][ky][kz]*DVQ;
-                                bbyy[ix][iy][iz]+=by[jx][jy][jz]*by[kx][ky][kz]*DVQ;
-                                bbyz[ix][iy][iz]+=by[jx][jy][jz]*bz[kx][ky][kz]*DVQ;
-								bbzx[ix][iy][iz]+=bz[jx][jy][jz]*bx[kx][ky][kz]*DVQ;
-                                bbzy[ix][iy][iz]+=bz[jx][jy][jz]*by[kx][ky][kz]*DVQ;
-                                bbzz[ix][iy][iz]+=bz[jx][jy][jz]*bz[kx][ky][kz]*DVQ;
-								
-								bvxx[ix][iy][iz]+=bx[jx][jy][jz]*vx[kx][ky][kz]*DVQ;
-                                bvxy[ix][iy][iz]+=bx[jx][jy][jz]*vy[kx][ky][kz]*DVQ; 
-                                bvxz[ix][iy][iz]+=bx[jx][jy][jz]*vz[kx][ky][kz]*DVQ;
-								bvyx[ix][iy][iz]+=by[jx][jy][jz]*vx[kx][ky][kz]*DVQ; 
-                                bvyy[ix][iy][iz]+=by[jx][jy][jz]*vy[kx][ky][kz]*DVQ; 
-                                bvyz[ix][iy][iz]+=by[jx][jy][jz]*vz[kx][ky][kz]*DVQ;
-								bvzx[ix][iy][iz]+=bz[jx][jy][jz]*vx[kx][ky][kz]*DVQ;
-                                bvzy[ix][iy][iz]+=bz[jx][jy][jz]*vy[kx][ky][kz]*DVQ;
-                                bvzz[ix][iy][iz]+=bz[jx][jy][jz]*vz[kx][ky][kz]*DVQ;
-
-								vbxx[ix][iy][iz]+=vx[jx][jy][jz]*bx[kx][ky][kz]*DVQ;
-                                vbxy[ix][iy][iz]+=vx[jx][jy][jz]*by[kx][ky][kz]*DVQ;
-                                vbxz[ix][iy][iz]+=vx[jx][jy][jz]*bz[kx][ky][kz]*DVQ;
-								vbyx[ix][iy][iz]+=vy[jx][jy][jz]*bx[kx][ky][kz]*DVQ;
-                                vbyy[ix][iy][iz]+=vy[jx][jy][jz]*by[kx][ky][kz]*DVQ;
-                                vbyz[ix][iy][iz]+=vy[jx][jy][jz]*bz[kx][ky][kz]*DVQ;
-								vbzx[ix][iy][iz]+=vz[jx][jy][jz]*bx[kx][ky][kz]*DVQ;
-                                vbzy[ix][iy][iz]+=vz[jx][jy][jz]*by[kx][ky][kz]*DVQ;
-                                vbzz[ix][iy][iz]+=vz[jx][jy][jz]*bz[kx][ky][kz]*DVQ;
-
+                                //bv
+                                bvxx[ix][iy][iz] += bx[jx][jy][jz] * vx[kx][ky][kz] * DVQ;
+                                bvxy[ix][iy][iz] += bx[jx][jy][jz] * vy[kx][ky][kz] * DVQ;
+                                bvxz[ix][iy][iz] += bx[jx][jy][jz] * vz[kx][ky][kz] * DVQ;
+                                bvyx[ix][iy][iz] += by[jx][jy][jz] * vx[kx][ky][kz] * DVQ;
+                                bvyy[ix][iy][iz] += by[jx][jy][jz] * vy[kx][ky][kz] * DVQ;
+                                bvyz[ix][iy][iz] += by[jx][jy][jz] * vz[kx][ky][kz] * DVQ;
+                                bvzx[ix][iy][iz] += bz[jx][jy][jz] * vx[kx][ky][kz] * DVQ;
+                                bvzy[ix][iy][iz] += bz[jx][jy][jz] * vy[kx][ky][kz] * DVQ;
+                                bvzz[ix][iy][iz] += bz[jx][jy][jz] * vz[kx][ky][kz] * DVQ;
+                                //vb
+                                vbxx[ix][iy][iz] += vx[jx][jy][jz] * bx[kx][ky][kz] * DVQ;
+                                vbxy[ix][iy][iz] += vx[jx][jy][jz] * by[kx][ky][kz] * DVQ;
+                                vbxz[ix][iy][iz] += vx[jx][jy][jz] * bz[kx][ky][kz] * DVQ;
+                                vbyx[ix][iy][iz] += vy[jx][jy][jz] * bx[kx][ky][kz] * DVQ;
+                                vbyy[ix][iy][iz] += vy[jx][jy][jz] * by[kx][ky][kz] * DVQ;
+                                vbyz[ix][iy][iz] += vy[jx][jy][jz] * bz[kx][ky][kz] * DVQ;
+                                vbzx[ix][iy][iz] += vz[jx][jy][jz] * bx[kx][ky][kz] * DVQ;
+                                vbzy[ix][iy][iz] += vz[jx][jy][jz] * by[kx][ky][kz] * DVQ;
+                                vbzz[ix][iy][iz] += vz[jx][jy][jz] * bz[kx][ky][kz] * DVQ;
                             }
                         }
                     }
@@ -241,16 +285,17 @@ int main() {
                     double nx = Qx / Q;
                     double ny = Qy / Q;
                     double nz = Qz / Q;
+                    double Qalpha = Qy * sin(alpha) + Qz * cos(alpha);
 
-                    double fnvx = vvxx[ix][iy][iz] * Qx + vvxy[ix][iy][iz] * Qy + vvxz[ix][iy][iz] * Qz;
-                    double fnvy = vvyx[ix][iy][iz] * Qx + vvyy[ix][iy][iz] * Qy + vvyz[ix][iy][iz] * Qz;
-                    double fnvz = vvzx[ix][iy][iz] * Qx + vvzy[ix][iy][iz] * Qy + vvzz[ix][iy][iz] * Qz;
+                    double nbx =  (bvxx[ix][iy][iz] - vbxx[ix][iy][iz]) * Qx + (bvxy[ix][iy][iz] - vbxy[ix][iy][iz]) * Qy +  (bvxz[ix][iy][iz] - vbxz[ix][iy][iz]) * Qz;
+                    double nby =  (bvyx[ix][iy][iz] - vbyx[ix][iy][iz]) * Qx + (bvyy[ix][iy][iz] - vbyy[ix][iy][iz]) * Qy +  (bvyz[ix][iy][iz] - vbyz[ix][iy][iz]) * Qz;
+                    double nbz =  (bvzx[ix][iy][iz] - vbzx[ix][iy][iz]) * Qx + (bvzy[ix][iy][iz] - vbzy[ix][iy][iz]) * Qy +  (bvzz[ix][iy][iz] - vbzz[ix][iy][iz]) * Qz;
 
-                    vx[ix][iy][iz] = fnvx/(nu*Q2);
-                    vy[ix][iy][iz] = fnvy/(nu*Q2);
-                    vz[ix][iy][iz] = fnvz/(nu*Q2);
+                    double nvx =  (vvxx[ix][iy][iz] + bbxx[ix][iy][iz]) * Qx + (vvxy[ix][iy][iz] + bbxy[ix][iy][iz]) * Qy + (vvxz[ix][iy][iz] + bbxz[ix][iy][iz]) * Qz;
+                    double nvy =  (vvyx[ix][iy][iz] + bbyx[ix][iy][iz]) * Qx + (vvyy[ix][iy][iz] + bbyy[ix][iy][iz]) * Qy + (vvyz[ix][iy][iz] + bbyz[ix][iy][iz]) * Qz;
+                    double nvz =  (vvzx[ix][iy][iz] + bbzx[ix][iy][iz]) * Qx + (vvzy[ix][iy][iz] + bbzy[ix][iy][iz]) * Qy + (vvzz[ix][iy][iz] + bbzz[ix][iy][iz]) * Qz;
 
-                    
+                                       
                     if ((ix - Nx) * (ix - Nx) + (iy - Ny) * (iy - Ny) != 0)
                     {
                     double rho = sqrt(Qx*Qx+Qy*Qy);
@@ -283,6 +328,17 @@ int main() {
                     e.theta.z = 0.;
                     }
 
+                    double nbtheta = e.theta.x*nbx + e.theta.y*nby + e.theta.z*nbz;
+                    double nbphy = e.phy.x*nbx + e.phy.y*nby + e.phy.z*nbz;
+                    double nvtheta = e.theta.x*nvx + e.theta.y*nvy + e.theta.z*nvz;
+                    double nvphy = e.phy.x*nvx + e.phy.y*nvy + e.phy.z*nvz;
+
+                    double n4[3];
+                    n4[0]=nbtheta;
+                    n4[1]=nbphy;
+                    n4[2]=nvtheta;
+                    n4[3]=nvphy;
+                                        
                     gsl_matrix * m = gsl_matrix_alloc (6, 6);
                     gsl_matrix * p = gsl_matrix_alloc (4, 6);
                     gsl_matrix_set_zero(m);
@@ -364,8 +420,20 @@ int main() {
 
                     gsl_matrix * result = inverseOfMatrixMultiply(m,p);
 
-
-                }
+                    double psi[3];
+                    for (int ii = 0; ii <= 3; ii++)
+                    {
+                        for (int jj = 0; jj <= 3; jj++)
+                        {
+                            psi[ii]=gsl_matrix_get (result, ii, jj)*n4[jj];
+                        }                        
+                    }
+                    bx[ix][iy][iz] = psi[0];
+                    by[ix][iy][iz] = psi[1];                   
+                    vx[ix][iy][iz] = psi[2];
+                    vy[ix][iy][iz] = psi[3];
+                    
+                    }
             }
         }
 
@@ -376,13 +444,16 @@ int main() {
                 for (int iz = 0; iz <= Lz; iz++) {
                     double Qx = -Qx0 + ix * DQx;
                     double Qy = -Qy0 + iy * DQy;
-                    EE += (vx[ix][iy][iz] * vx[ix][iy][iz] + vy[ix][iy][iz] * vy[ix][iy][iz] +
-                          vz[ix][iy][iz] * vz[ix][iy][iz])*DVQ;
+                    EE += (
+                        vx[ix][iy][iz] * vx[ix][iy][iz] + vy[ix][iy][iz] * vy[ix][iy][iz] + vz[ix][iy][iz] * vz[ix][iy][iz] 
+                        +
+                        bx[ix][iy][iz] * bx[ix][iy][iz] + by[ix][iy][iz] * by[ix][iy][iz] + bz[ix][iy][iz] * bz[ix][iy][iz]
+                         )*DVQ;
 
                 }
             }
         }
-            printf("%i %g\n", it, EE);
+            printf("%i %.19f\n", it, EE);
     }
     return 0;
 
