@@ -1,1 +1,3 @@
-gcc m.c linear_terms.c nonlinear_terms.c -lm
+gcc -Wall -I/usr/local/include -c m.c linear_terms.c nonlinear_terms.c
+gcc -L/usr/local/lib m.o linear_terms.o nonlinear_terms.o -lgsl -lgslcblas -lm
+rm *.o

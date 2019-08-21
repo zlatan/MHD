@@ -1,6 +1,7 @@
-#include "variables.h"
 #include <stdlib.h>
 #include <math.h>
+#include "variables.h"
+#include "parameters.h"
 
 void set_initial_values_nonlinear_term_zero(NonlinearTerm *nt)
 {

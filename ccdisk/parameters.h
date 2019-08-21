@@ -6,10 +6,10 @@
 #define Qy0 3.0
 #define Qz0 3.0
 
+#define aleph 0.0
 #define betay 0.0
-#define omega -2./3.
-#define alpha 0.0
 #define rnuk 0.001
 #define rnum 0.001
 #define vc 0.1
 #define vphi 0.2
+#define omega -2./3.
